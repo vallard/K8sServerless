@@ -17,12 +17,20 @@ In this lab we will create a serverless application ontop of an on-prem kubernet
 
 ## Part II: Building a Serverless Application
 
+### Testing a basic Serverless Application
+
 * [FONK Guestbook](fonk/)
-* [NodeJS Frontend](node/)
-* [FaaS](faas/)
+
+### Building a more complex serverless Application
+
+* [NodeJS Frontend](photos/)
+* [FaaS Backend](faas/)
 * [Security Revisions](security/)
 
 ## Credits and Shoutouts
 
-* [Julio Gomez](https://twitter.com/juliodevops)
+Much of the work here is based off the FONK idea that Pete Johnson has been pushing.  Julio also has made large contributions by speaking and adding code to this terrific movement. We are hopeful that as we go forward more people find the ideas of serverless bring great promise to on prem workloads and are not limited to public clouds only. 
+
 * [Pete Johnson](https://twitter.com/nerdguru)
+* [Julio Gomez](https://twitter.com/juliodevops)
+

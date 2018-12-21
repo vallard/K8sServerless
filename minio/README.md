@@ -3,7 +3,7 @@
 Our object store can be configured with: 
 
 ```
-helm install stable/minio --name fonkfe --set service.type=LoadBalancer,persistence.enabled=false
+helm install stable/minio --name fonkfe -f config.yaml
 ```
 
 Now let us see if it is up: 
@@ -11,6 +11,7 @@ Now let us see if it is up:
 ```
 kubectl get pods,services
 ```
+
 This returns: 
 
 ```
@@ -56,7 +57,14 @@ metadata:
 type: Opaque
 ```
 
-These secrets are base64 encoded.  We can decode this with: 
+These secrets are base64 encoded.  They are:
+
+```
+AKIAIOSFODNN7EXAMPLE 
+wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+```
+
+We can decode this with: 
 
 ```
 echo "secret" | base64 decode
@@ -131,6 +139,11 @@ take a picture and copy picture to your computer desktop, then use minio to uplo
 ```
 mc mb minio/test
 mc cp ~/Desktop/IMG_0952.JPG minio/test/
+```
+
+Output will show something uploading:
+ 
+```
 ...ktop/IMG_0952.JPG:  2.11 MB / 2.11 MB  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  100.00% 231.74 MB/s 0s
 ```
 
@@ -138,3 +151,9 @@ You should verify that the image was properly placed in the storage bucket in th
 
 
 With Minio up we now have object storage.  While this is a quick way to set it up, this is not good for production.  We would like to be able to make sure that the volumes persist if the container goes down or if even the host goes down.  We can do this with persistent volumes and persistent volume claims.  In addition we could use more minio nodes to provide the scale and availability for our cluster.  
+
+
+## Sources
+
+* [https://blog.minio.io/lambda-computing-with-minio-and-kafka-de928897ccdf](https://blog.minio.io/lambda-computing-with-minio-and-kafka-de928897ccdf)
+* [https://docs.minio.io/docs/minio-bucket-notification-guide](https://docs.minio.io/docs/minio-bucket-notification-guide)

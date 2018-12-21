@@ -1,0 +1,114 @@
+/* nav color: #292e39 */
+
+body{
+  background-color : #f1f4f8;
+  font-family: Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* main nav bar on top */
+/*
+.navbar-inverse {
+  background-color: #293038;
+  height: 50px;
+}
+.navbar-inverse .navbar-text {
+  color: #fff;
+  letter-spacing: 1px;
+  margin-left: 40px;
+  float: left;
+
+}
+
+.navbar-nav .nav-link {
+  color: #fff;
+  text-decoration: underline;
+}
+
+a .fa {
+  color: #fff;
+}
+
+.navbar-light {
+  background-color: #fff;
+  height: 40px;
+}
+*/
+
+.stepsbar {
+  color: #222;
+}
+
+.stepsbar a {
+  color: #222;
+}
+
+.stepsbar .active {
+  border-bottom: 1px solid #2f87c0;
+}
+
+.main-panel {
+  margin-top: 40px;
+
+}
+
+.scrolling-list {
+  height: 350px;
+  overflow: auto;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  background-color: #222;
+  color: #fff;
+}
+
+.cover {
+  background-color: rgba(0,0,0,0.5);
+  width: 100%;
+  height: 100%;
+  z-index: 10 !important;
+  top: 0;
+  left: 0;
+  position: fixed
+}
+
+.loading {
+  text-align: center;
+  margin-top: 5em;
+}
+
+.button-container {
+    background-color: rgb(41,182,246);
+    color: white;
+    font-size: 28px;
+    border-radius: 999px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    position: fixed;
+    right: 28px;
+    bottom: 100px;
+}
+
+.button-container:hover {
+    background-color: rgb(40, 153, 230);
+}
+
+.plus-icon {
+    height: 50px;
+    width: 50px;
+    background: url('/images/plus_icon.png') no-repeat center center;
+}
+
+input[type="file"] {
+  display: none;
+}
