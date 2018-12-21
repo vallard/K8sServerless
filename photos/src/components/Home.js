@@ -1,15 +1,17 @@
 import React from 'react'
 
-const Home = ({photos,uploadFunc}) => (
+const Home = ({photos,uploadFunc, preview}) => (
     <div className="container">
-        <p></p>
-        <h1 className="header">Photos</h1>
-        <p className="lead">Welcome to your photo album!
+        <p className="lead">
+          Welcome to your photo album!
         </p>
-        <div className="button-container" onClick={uploadFunc}>
+        <div>
+          <img src={preview} height="200" alt="uploaded"/>
+        </div>
+        <div className="button-container" >
           <label htmlFor="file-upload" className="plus-icon">
           </label>
-          <input id="file-upload" type="file" />
+          <input id="file-upload" type="file" onChange={uploadFunc}/>
         </div>
     </div>
 );

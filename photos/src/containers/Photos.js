@@ -8,6 +8,7 @@ class Photos extends Component {
     super(props);
     this.state = {
       photos : this.props.photos || [],
+      preview: ""
     }
   }
 
@@ -22,14 +23,26 @@ class Photos extends Component {
     })
   }
 
-  uploadPhoto() {
-    console.log("Uploading photo")
+  uploadPhoto = (e) =>  {
+    const t = this;
+    var f = e.target
+    //console.log("Name: ", f.value, " Last modified: ", f.lastModifiedDate)
+    var reader = new FileReader();
+    reader.onloadend = function() {
+      t.setState({preview: reader.result})
+    }
+    if (f.files[0]) {
+      reader.readAsDataURL(f.files[0]); 
+    }else {
+      t.setState({preview: ""})
+    } 
   }
-
+    
+  
   render() {
     return (
     <div>
-      <Home photos={this.state.photos} uploadFunc={this.uploadPhoto}/>
+      <Home photos={this.state.photos} uploadFunc={this.uploadPhoto} preview={this.state.preview}/>
     </div>
     )
   }
