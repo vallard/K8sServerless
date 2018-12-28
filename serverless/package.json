@@ -1,0 +1,13 @@
+{
+  "name": "photo-backend",
+  "version": "1.0.0",
+  "description": "Sample Photo service.",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "serverless-kubeless": "^0.4.4",
+    "kubernetes-client": "^3.10.1"
+  },
+  "main": "handler.py",
+  "author": "vallard@benincosa.com",
+  "license": "Apache-2.0"
+}

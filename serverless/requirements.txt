@@ -1,0 +1,4 @@
+pymongo
+minio
+bson
+kubernetes==2.0.0

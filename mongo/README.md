@@ -5,7 +5,7 @@
 We can use the helm chart again with the following:
 
 ```
-helm install stable/mongodb --name fonkdb --set service.type=LoadBalancer,persistence.enabled=false,usePassword=false
+helm install stable/mongodb --name fonkdb 
 ```
 
 Obviously we would put a password in real life to this but for our application and simplicity we'll leave that out for now.  
@@ -35,3 +35,20 @@ To delete this we could run `helm delete --purge fonkdb`
 ## Testing MongoDB
 
 In this section we will explore some of the ways MongoDB works and how we can do quieries. 
+
+```
+export MONGODB_ROOT_PASSWORD=$(kubectl get secret --namespace default fonkdb-mongodb -o jsonpath="{.data.mongodb-root-password}" | base64 --decode)
+```
+
+The password for `sls` is:
+
+```
+export MONGODB_PASSWORD=$(kubectl get secret --namespace default fonkdb-mongodb -o jsonpath="{.data.mongodb-password}" | base64 --decode)
+```
+
+Now we can connect with: 
+
+```
+kubectl run --namespace default fonkdb-mongodb-client --rm --tty -i --restart='Never' --image bitnami/mongodb --command -- mongo admin --host fonkdb-mongodb --authenticationDatabase admin -u root -p $MONGODB_ROOT_PASSWORD
+```
+This will put us at the mongo db console to run some commands. 

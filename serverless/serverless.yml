@@ -1,0 +1,33 @@
+# Welcome to serverless. Read the docs
+# https://serverless.com/framework/docs/
+
+# Serverless.yml is the configuration the CLI
+# uses to deploy your code to your provider of choice
+
+# The `service` block is the name of the service
+service: photos
+
+# The `provider` block defines where your service will be deployed
+provider:
+  name: kubeless
+  defaultDNSResolution: 'xip.io'
+  runtime: python2.7
+
+plugins:
+  - serverless-kubeless
+
+# The `functions` block defines what code to deploy
+functions:
+  list:
+   handler: handler.list
+   environment:
+      MONGODB_HOST: "fonkdb-mongodb"
+      MONGODB_PORT: 27017
+      MONGODB_NAME: "photos"
+      MONGODB_COLLECTION: "entries"
+      MONGODB_SECRETS: "fonkdb-mongodb"
+      MINIO_HOST: "fonkfe:9000"
+      MINIO_SECRETS: "fonkfe"
+   events:
+      - http:
+          path: /list
