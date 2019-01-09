@@ -6,7 +6,11 @@ const Home = ({photos,uploadFunc, preview}) => (
           Welcome to your photo album!
         </p>
         <div>
-          <img src={preview} height="200" alt="uploaded"/>
+          {preview === "" ? 
+            <div/>
+            :
+            <img src={preview} height="200" alt="uploaded"/>
+          }
         </div>
         <div className="button-container" >
           <label htmlFor="file-upload" className="plus-icon">

@@ -23,16 +23,35 @@ class Photos extends Component {
     })
   }
 
-  uploadPhoto = (e) =>  {
+  showFile = (e) => {
     const t = this;
     var f = e.target
-    //console.log("Name: ", f.value, " Last modified: ", f.lastModifiedDate)
     var reader = new FileReader();
     reader.onloadend = function() {
       t.setState({preview: reader.result})
     }
     if (f.files[0]) {
       reader.readAsDataURL(f.files[0]); 
+    }
+  }
+
+  uploadPhoto = (e) =>  {
+    const t = this;
+    console.log("updated.")
+    var f = e.target
+    if (f.files[0]) {
+      let data = new FormData();
+      data.append('file', f.files[0])
+      data.append('filename', f.files[0].name )
+      fetch("http://localhost:5000/image", {
+        method: 'POST',
+        body:  data,
+      }).then((response) => {
+        response.json().then((j) => {
+          // TODO: error checking, ensure j has an image.
+          t.setState({preview: j.image })
+        })
+      })
     }else {
       t.setState({preview: ""})
     } 
