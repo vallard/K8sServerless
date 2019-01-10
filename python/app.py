@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 import json, sys
 import datetime
+from datetime import timedelta
 import pymongo
 from bson.json_util import dumps as bdumps
 
@@ -55,8 +56,9 @@ def upload_image(request):
     photo = {
         "name" : ufile.filename,
         "date" : datetime.datetime.utcnow(),
-        "url" : "http://10.93.140.130:9000/uploads/" + ufile.filename
+        "url" : minio.presigned_get_object('uploads', ufile.filename, expires=timedelta(days=5))
     }
+    
     # put object information into database. 
     img_id = collection.insert_one(photo).inserted_id
     return bdumps({"id": img_id }), 200
