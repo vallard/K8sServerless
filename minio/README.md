@@ -152,9 +152,6 @@ You should verify that the image was properly placed in the storage bucket in th
 
 With Minio up we now have object storage.  While this is a quick way to set it up, this is not good for production.  We would like to be able to make sure that the volumes persist if the container goes down or if even the host goes down.  We can do this with persistent volumes and persistent volume claims.  In addition we could use more minio nodes to provide the scale and availability for our cluster.
 
-## Python to upload an image
-
-  
 
 
 ## Sources

@@ -23,7 +23,6 @@ class Photos extends Component {
   }
 
   showFile = (e) => {
-    const t = this;
     var f = e.target
     var reader = new FileReader();
     reader.onloadend = function() {
@@ -35,7 +34,6 @@ class Photos extends Component {
   }
 
   uploadPhoto = (e) =>  {
-    const t = this;
     console.log("updated.")
     var f = e.target
     if (f.files[0]) {

@@ -5,21 +5,27 @@ const Home = ({photos,uploadFunc, delFunc}) => (
         <p className="lead">
           Welcome to your photo album!
         </p>
-        <div>
+        <div className="row">
           {photos.map( (photo, i) => (
-            <div className="photo" key={i + "-" + photo.id}>
-              <span>{photo.name}</span>
-              { photo.date == null ?
-                  <span key={"foo-" + i}></span>
-                  :
-                  <span className="small">{Date(photo.date).toLocaleString()}</span>
-              }
+            <div className="card card-photo col-sm-3" key={i + "-" + photo.id}>
               { photo.url == null ? 
                   <br/>
                   :
-                  <img src={photo.url} height="200" alt={i + "-" + photo.name} />
+                  <img src={photo.url} className="card-img-top" alt={i + "-" + photo.name} />
               }
-              <button className="btn btn-sm btn-outline-danger" id={i} onClick={delFunc}>Delete</button>
+              <div className="card-body">
+                { photo.date == null ?
+                    <br/>
+                    :
+                    <div className="card-title small">{Date(photo.date).toLocaleString()}</div>
+                }
+                { photo.objects == null ? 
+                    <br/>
+                    :
+                    <div className="card-text">{photo.objects}</div>
+                }
+                <button className="btn btn-sm btn-outline-danger" id={i} onClick={delFunc}>Delete</button>
+              </div>
             </div>
           ))}
         </div>
