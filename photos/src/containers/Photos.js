@@ -43,12 +43,13 @@ class Photos extends Component {
       let data = new FormData();
       data.append('file', f.files[0])
       data.append('filename', f.files[0].name )
-      fetch("http://localhost:5000/image", {
+      fetch("http://localhost:5000/images", {
         method: 'POST',
         body:  data,
       }).then((response) => {
         response.json().then((j) => {
           // TODO: error checking, ensure j has an image.
+          console.log("response: ", j)
           t.setState({preview: j.image })
         })
       })

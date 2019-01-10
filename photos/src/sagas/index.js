@@ -1,9 +1,15 @@
-import { put, all, takeEvery } from 'redux-saga/effects'
+import { put, all, call, takeEvery } from 'redux-saga/effects'
 import * as actions from '../actions'
+import photoAPI from '../services/photos'
 
 
 export function* get_photos() {
-  return yield put(actions.gotPhotos(""))
+  let response = yield call(photoAPI.get)
+  if (response instanceof Error) {
+    return yield put(actions.gotError(response))
+  }
+  console.log(response)
+  return yield put(actions.gotPhotos(response.photos))
 } 
 
 export function* watchPhotosRequest() {

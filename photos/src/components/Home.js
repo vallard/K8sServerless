@@ -6,6 +6,21 @@ const Home = ({photos,uploadFunc, preview}) => (
           Welcome to your photo album!
         </p>
         <div>
+          {photos.map( (photo, i) => (
+            <div className="photo" key={i + "-" + photo.id}>
+              <span>{photo.name}</span>
+              { photo.date == null ?
+                  <span key={"foo-" + i}></span>
+                  :
+                  <span className="small">{Date(photo.date).toLocaleString()}</span>
+              }
+              { photo.url == null ? 
+                  <br/>
+                  :
+                  <img src={photo.url} />
+              }
+            </div>
+          ))}
           {preview === "" ? 
             <div/>
             :
