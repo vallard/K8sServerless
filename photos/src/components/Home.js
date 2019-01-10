@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Home = ({photos,uploadFunc, preview}) => (
+const Home = ({photos,uploadFunc, delFunc}) => (
     <div className="container">
         <p className="lead">
           Welcome to your photo album!
@@ -17,15 +17,11 @@ const Home = ({photos,uploadFunc, preview}) => (
               { photo.url == null ? 
                   <br/>
                   :
-                  <img src={photo.url} />
+                  <img src={photo.url} height="200" alt={i + "-" + photo.name} />
               }
+              <button className="btn btn-sm btn-outline-danger" id={i} onClick={delFunc}>Delete</button>
             </div>
           ))}
-          {preview === "" ? 
-            <div/>
-            :
-            <img src={preview} height="200" alt="uploaded"/>
-          }
         </div>
         <div className="button-container" >
           <label htmlFor="file-upload" className="plus-icon">

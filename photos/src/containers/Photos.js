@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { getPhotos } from '../actions'
+import { getPhotos, delPhoto, upPhoto } from '../actions'
 import Home from '../components/Home'
 
 class Photos extends Component {
@@ -8,7 +8,6 @@ class Photos extends Component {
     super(props);
     this.state = {
       photos : this.props.photos || [],
-      preview: ""
     }
   }
 
@@ -28,7 +27,7 @@ class Photos extends Component {
     var f = e.target
     var reader = new FileReader();
     reader.onloadend = function() {
-      t.setState({preview: reader.result})
+      // show the file that was uploaded
     }
     if (f.files[0]) {
       reader.readAsDataURL(f.files[0]); 
@@ -43,26 +42,21 @@ class Photos extends Component {
       let data = new FormData();
       data.append('file', f.files[0])
       data.append('filename', f.files[0].name )
-      fetch("http://localhost:5000/images", {
-        method: 'POST',
-        body:  data,
-      }).then((response) => {
-        response.json().then((j) => {
-          // TODO: error checking, ensure j has an image.
-          console.log("response: ", j)
-          t.setState({preview: j.image })
-        })
-      })
-    }else {
-      t.setState({preview: ""})
+      this.props.upPhoto(data)
     } 
   }
     
+  deletePhoto = (e) => {
+    const po = this.state.photos[e.target.id]
+    const p = po['_id'].$oid
+    console.log("Photo ID: ", p)
+    this.props.delPhoto(p)
+  }
   
   render() {
     return (
     <div>
-      <Home photos={this.state.photos} uploadFunc={this.uploadPhoto} preview={this.state.preview}/>
+      <Home photos={this.state.photos} delFunc={this.deletePhoto} uploadFunc={this.uploadPhoto} />
     </div>
     )
   }
@@ -75,6 +69,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   getPhotos: () => dispatch(getPhotos()),
+  delPhoto: (id) => dispatch(delPhoto(id)),
+  upPhoto: (data) => dispatch(upPhoto(data)),
 })
 
 

@@ -13,6 +13,40 @@ const photoAPI = {
       return error
     })
   },
+  del(userData) { 
+    return fetch(API + '/images', {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "id" : userData.id
+      }),
+    })
+    .then(statusHelper)
+    .then(data => {
+      return data
+    })
+    .catch( (error) => {
+      console.log("catch error: " , error)
+      return error
+    })
+  },
+  up(userData) {
+    return fetch(API + "/images", {
+        method: 'POST',
+        body:  userData,
+    })
+    .then(statusHelper)
+    .then(data => {
+      return data
+    })
+    .catch( (error) => {
+      console.log("catch error: " , error)
+      return error
+    })
+  },
 }
 
 // thanks: https://github.com/redux-saga/redux-saga/issues/561
