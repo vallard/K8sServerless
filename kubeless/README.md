@@ -243,8 +243,6 @@ mc event remove minio/uploads arn:minio:sqs:us-east-1:1:webhook
 ```
 
 
-
-
 ## Sources
 
 * [https://kubeless.io/docs/quick-start/](https://kubeless.io/docs/quick-start/)

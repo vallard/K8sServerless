@@ -8,12 +8,12 @@ In this lab we will create a serverless application ontop of an on-prem kubernet
 
 ## Part I: Building the Platform
 
-* [DEVNET Sandbox](sb/)
-* [CCP Kubernetes](kubernetes/)
-* [Helm](helm/)
-* [Minio](minio/)
-* [MongoDB](mongo/)
-* [Kubeless](kubeless/)
+* [DEVNET Sandbox](sb/README.md)
+* [CCP Kubernetes](kubernetes/README.md)
+* [Helm](helm/README.md)
+* [MongoDB](mongo/README.md)
+* [Minio](minio/README.md)
+* [Kubeless](kubeless/README.md)
 
 ## Part II: Building a Serverless Application
 
@@ -23,9 +23,10 @@ In this lab we will create a serverless application ontop of an on-prem kubernet
 
 ### Building a more complex serverless Application
 
-* [NodeJS Frontend](photos/)
-* [FaaS Backend](serverless/)
-* [Security Revisions](security/)
+* [Application Overview](photos/OVERVIEW.md)
+* [NodeJS Frontend](photos/README.md)
+* [FaaS Backend](serverless/README.md)
+* [Object Recognition](yolo/README.md)
 
 ## Credits and Shoutouts
 
