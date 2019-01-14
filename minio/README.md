@@ -3,10 +3,24 @@
 Our object store can be configured with: 
 
 ```
-helm install stable/minio --name fonkfe -f https://
+helm install stable/minio --name fonkfe -f https://raw.githubusercontent.com/vallard/K8sServerless/master/minio/config.yaml
 ```
 
-Now let us see if it is up: 
+We've added some configuration information in this file we will go over later.  
+
+### An aside...
+If you wanted to customize minio, you can edit the helm chart config.  You can start by getting the default chart config with:
+
+```
+helm inspect values stable/minio >minio-helm-config.yaml
+```
+You could then change values and update it with:
+
+```
+helm upgrade -f minio-helm-config.yaml fonkfe stable/minio
+```
+
+Ok, let's see if minio is up: 
 
 ```
 kubectl get pods

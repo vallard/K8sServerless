@@ -164,86 +164,52 @@ kubeless function delete hello
 ```
 Kubeless deletes the deployment and the service so its a bit cleaner than using kubectl to remove everything.
 
-Let's make a function that builds upon our minio configuration and can create a thumbnail image of our image whenever we upload it to minio. 
 
 ## Photo Image Resize Function
 
-### Minio Setup
-
-#### Add Webhooks to Minio
-
-Let's start fresh with a config file for helm.  This way we can add our webhooks to call the resize function. 
-
-```
-helm del --purge fonkfe
-```
-
-Recreate it with:
-```
-helm install stable/minio --name fonkfe -f config.yaml
-```
+Let's make a function that builds upon our minio configuration and can create a thumbnail image of our image whenever we upload it to minio.  The `event` in this case is a file upload.  This will trigger a call to our photo resize function.  
 
 ### Make Buckets
 
-We will use this function in our big application.  Let's make some buckets: 
+We will use this function in our big application.  Let's make some buckets first:
 
 ```
 mc mb minio/uploads
 mc mb minio/thumbs
 ```
 
+### Make Webhooks
+ 
+You can add `webhooks` minio.  We already added these with the config file you used to create the helm chart in the beginning.  Run the command:  
 
 ```
-helm inspect values stable/minio >config-old
-```
-Edit `helm-config` and add the following: 
-
-
-
-
-Update the revision
-
-```
-helm upgrade -f config-old fonkfe stable/minio
+mc admin config get minio
 ```
 
-
-Now let's edit the configMap for minio.  There are a few ways we could do this: 
-
-```
-kubectl edit cm fonkfe
-```
-
-Find the spot where the `webhook` is defined and change it to look like the below:
+You will see an entry: 
 
 ```json
 "webhook": {
-      "1": {
-        "enable": true,
-        "endpoint": "http://thumb:8080"
-      }
-    }
+			"1": {
+				"enable": true,
+				"endpoint": "http://thumb:8080"
+			}
+		}
 ```
- 
-Now save this config and restart the container.  Then check to make sure you see the `webhook` `thumb` defined.
 
-```
-mc admin service restart minio
-mc admin config get minio
-```
-Deploy the event to minio
+This is the first webhook `1` that is available to us.  Let's use it: 
 
 ```
 mc event add minio/uploads arn:minio:sqs:us-east-1:1:webhook --event put 
-Successfully added arn:minio:sqs:us-east-1:1:webhook
 ```
-(You could also filter by suffixes of items but this is difficult if they use JPEG, jpg, Jpeg, etc for extension names.  Without the filter all items trigger a notification. )
+
+(You could also filter by suffixes of items but this is difficult if they use JPEG, jpg, Jpeg, etc for extension names.  Without the filter all items trigger a notification. ).  We can now see the webhook is ready:
 
 ```
 mc admin info minio
 ```
 
-Make rules so we can access the secrets with our python script (otherwise it crashes)
+Make rules so we can access the secrets with our python script (otherwise it crashes).  This is insecure!  However, we will use it just to make it work for now:
 
 ```
 kubectl create clusterrolebinding default-cluster-admin --clusterrole=cluster-admin --serviceaccount=default:default
@@ -260,7 +226,7 @@ kubeless function deploy thumb \
  --dependencies requirements.txt
 ```
 
-Finally set minio to call the function whenever something is uploaded to the `/uploads` directory. You should then see it appear in the `/thumbs` directory!
+Now upload an image in the `uploads` bucket but be sure the extension is `JPEG`.  You should instantly see a smaller version appear in the `/thumbs` directory!
 
 
 ### Exercise:
@@ -274,11 +240,12 @@ kubeless function update thumb -f resize.py
 ```
 
 
-To remove the notification: 
+##### (optional, but don't do it) To remove the notification you would run:
 
 ```
 mc event remove minio/uploads arn:minio:sqs:us-east-1:1:webhook
 ```
+
 
 
 ## Sources
