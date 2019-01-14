@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: fonkfe
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: minio.10.10.20.20.xip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: fonkfe
+          servicePort: 9000

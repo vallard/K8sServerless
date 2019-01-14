@@ -11,7 +11,17 @@ service: photos
 provider:
   name: kubeless
   defaultDNSResolution: 'xip.io'
+  hostname: 10.93.140.128.xip.io
   runtime: python2.7
+  environment:
+    MONGODB_HOST: "fonkdb-mongodb"
+    MONGODB_PORT: 27017
+    MONGODB_NAME: "photos"
+    MONGODB_COLLECTION: "entries"
+    MONGODB_SECRETS: "fonkdb-mongodb"
+    MINIO_HOST: "fonkfe:9000"
+    MINIO_SECRETS: "fonkfe"
+    MINIO_BUCKET: "uploads"
 
 plugins:
   - serverless-kubeless
@@ -19,15 +29,14 @@ plugins:
 # The `functions` block defines what code to deploy
 functions:
   list:
-   handler: handler.list
-   environment:
-      MONGODB_HOST: "fonkdb-mongodb"
-      MONGODB_PORT: 27017
-      MONGODB_NAME: "photos"
-      MONGODB_COLLECTION: "entries"
-      MONGODB_SECRETS: "fonkdb-mongodb"
-      MINIO_HOST: "fonkfe:9000"
-      MINIO_SECRETS: "fonkfe"
+   handler: photos.list
    events:
       - http:
-          path: /list
+          path: /images
+          method: get
+  delete:
+   handler: photos.del
+   events:
+      - http:
+          path: /images
+          method: delete

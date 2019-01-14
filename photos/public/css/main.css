@@ -106,7 +106,7 @@ a .fa {
 .plus-icon {
     height: 50px;
     width: 50px;
-    background: url('/images/plus_icon.png') no-repeat center center;
+    background: url('/photobook/images/plus_icon.png') no-repeat center center;
 }
 
 input[type="file"] {

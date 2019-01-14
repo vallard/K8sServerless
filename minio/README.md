@@ -3,26 +3,34 @@
 Our object store can be configured with: 
 
 ```
-helm install stable/minio --name fonkfe -f config.yaml
+helm install stable/minio --name fonkfe 
 ```
 
 Now let us see if it is up: 
 
 ```
-kubectl get pods,services
+kubectl get pods
 ```
 
 This returns: 
 
 ```
-``
-NAME                          READY     STATUS    RESTARTS   AGE
-pod/fonkfe-5b674d78db-hwzgc   1/1       Running   0          2m
-
-NAME                 TYPE           CLUSTER-IP       EXTERNAL-IP     PORT(S)          AGE
-service/fonkfe       LoadBalancer   10.100.115.131   10.93.140.130   9000:31569/TCP   2m
-service/kubernetes   ClusterIP      10.96.0.1        <none>          443/TCP          4d
+...
+fonkfe-544ddf6b86-qpcwf          1/1       Running   0          18m
+...
 ```
+Be sure your pods are `Running` so that things work. 
+
+Now we want to be able to connect to the frontend from the public Internet.  (Well we are behind a VPN, but the idea is the same).  In order to do this there are two ways we could expose our minio instance.  The first is to use a LoadBalancer `EXTERNAL-IP` which is easy, the second is to use an ingress rule.  CCP already comes with an [ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress/) installed.  To use it we just need to make a rule. 
+
+First let's get the IP address of the ingress controller:
+
+```
+kubectl -n ccp get svc nginx-ingress-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}
+```
+This should give you out an IP address such as `10.
+
+An ingress rule is pretty simple.  It contains the name of the 
 
 Noting the minio cluster we can now log into it by opening our web browser to ```<loadbalancer IP>:9000```
 

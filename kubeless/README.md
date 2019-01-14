@@ -29,6 +29,31 @@ NAME                                                     DESIRED   CURRENT   REA
 replicaset.apps/kubeless-controller-manager-574cf75749   1         1         0         1m
 ```
 
+## Patching the Python Runtime
+
+`CORS` is lacking in the python runtime. In addition to that we will need to process form data in our app for file uploads.  We're going to fix it here.  
+
+Look for these lines: 
+
+```
+"python:2.7", "phase": "installation"}, {"env": {"PYTHONPATH": "$(KUBELESS_INSTALL_VOLUME)/lib/python2.7/site-packages:$(KUBELESS_INSTALL_VOLUME)"},
+    "image": "kubeless/python@sha256:34332f4530508a810f491838a924c36ceac0ec7cab487520e2db2b037800ecda",
+```
+Very carefully replace the python runtime image with: 
+
+```
+"python:2.7", "phase": "installation"}, {"env": {"PYTHONPATH": "$(KUBELESS_INSTALL_VOLUME)/lib/python2.7/site-packages:$(KUBELESS_INSTALL_VOLUME)"},
+    "image": "vallard/kubeless-python:2.7",
+```
+
+Now we will delete the controller pod so that it rereads the configmaps: 
+
+```
+kubectl delete pods -n kubeless -l kubeless=controller
+```
+
+This should make cors enabled on our python runtime containers. 
+
 ## Install Kubeless Client
 
 ### Mac & Linux

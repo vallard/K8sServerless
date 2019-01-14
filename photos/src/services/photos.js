@@ -1,5 +1,6 @@
-const hname = window.location.hostname
-export const API = "http://" + hname + ":5000"
+//const hname = window.location.hostname
+//export const API = "http://" + hname + ":5000"
+export const API = "http://10.93.140.128.xip.io"
 
 const photoAPI = {
   get() {
