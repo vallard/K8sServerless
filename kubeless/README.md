@@ -3,7 +3,7 @@
 
 ## Installation 
 
-The Kubeless [installation procedure]( ) is well documented.  For convinence and predictability we will use the v1.0.1 release
+The Kubeless [installation procedure](https://kubeless.io/docs/quick-start/) is well documented.  We will repost steps here for convinence and predictability and use the v1.0.1 release
 
 ```
 kubectl create ns kubeless
@@ -31,9 +31,23 @@ replicaset.apps/kubeless-controller-manager-574cf75749   1         1         0  
 
 ## Patching the Python Runtime
 
-`CORS` is lacking in the python runtime. In addition to that we will need to process form data in our app for file uploads.  We're going to fix it here.  
+Each serverless function runs in a container.  We call this the `runtime` container.  You can see the runtime environments on the [kubeless github page](https://github.com/kubeless/runtimes).  As serverless is new and constantly evolving things change quick.  However this also means that certain features you may want for your apps are not included in the runtimes.  
 
-Look for these lines: 
+The features of `CORS` and file uploads are not included.  Fortunately, we can patch this by using our own runtime environment.  
+
+We have already prepared a new runtime environment for this lab.  To use it we have to modify the [ConfigMap](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/) that we just installed with kubeless. To see it run:
+
+```
+kubectl get cm -n kubeless
+```  
+
+To modify we run:
+
+```
+kubectl edit cm -n kubeless kubeless-config
+```
+
+This will put us in a vi session.  We will look for the following lines: 
 
 ```
 "python:2.7", "phase": "installation"}, {"env": {"PYTHONPATH": "$(KUBELESS_INSTALL_VOLUME)/lib/python2.7/site-packages:$(KUBELESS_INSTALL_VOLUME)"},
@@ -43,7 +57,7 @@ Very carefully replace the python runtime image with:
 
 ```
 "python:2.7", "phase": "installation"}, {"env": {"PYTHONPATH": "$(KUBELESS_INSTALL_VOLUME)/lib/python2.7/site-packages:$(KUBELESS_INSTALL_VOLUME)"},
-    "image": "vallard/kubeless-python:2.7",
+    "image": "vallard/kubeless-pythonf:2.7",
 ```
 
 Now we will delete the controller pod so that it rereads the configmaps: 
@@ -52,7 +66,7 @@ Now we will delete the controller pod so that it rereads the configmaps:
 kubectl delete pods -n kubeless -l kubeless=controller
 ```
 
-This should make cors enabled on our python runtime containers. 
+This should make cors enabled and file uploads possible on our python runtime containers. 
 
 ## Install Kubeless Client
 
@@ -91,6 +105,8 @@ You'll then see with `kubectl` that new pod will come up:
 ```
 kubectl get pods,svc -l function=hello
 ```
+
+If you see `ErrImagePull` in the status it means the runtime was improperly typed and needs to be changed.  Repeat the steps above and restart the controller and you should see it deploy. 
 
 kubeless deploys a [deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) and a [service](https://kubernetes.io/docs/concepts/services-networking/service/)
 
@@ -146,7 +162,7 @@ Exit out of the container and delete the hello function
 exit
 kubeless function delete hello
 ```
-Kubeless deletes the deployment and the service so its a bit cleaner than using kubectl. 
+Kubeless deletes the deployment and the service so its a bit cleaner than using kubectl to remove everything.
 
 Let's make a function that builds upon our minio configuration and can create a thumbnail image of our image whenever we upload it to minio. 
 
@@ -154,24 +170,28 @@ Let's make a function that builds upon our minio configuration and can create a 
 
 ### Minio Setup
 
-Need to delete minio and start again? 
+#### Add Webhooks to Minio
+
+Let's start fresh with a config file for helm.  This way we can add our webhooks to call the resize function. 
 
 ```
 helm del --purge fonkfe
 ```
-Recreate it: 
+
+Recreate it with:
 ```
-helm install stable/minio --name fonkfe --set service.type=LoadBalancer,persistence.enabled=true
+helm install stable/minio --name fonkfe -f config.yaml
 ```
 
-Make some buckets to test with. 
+### Make Buckets
+
+We will use this function in our big application.  Let's make some buckets: 
 
 ```
 mc mb minio/uploads
 mc mb minio/thumbs
 ```
 
-Get the current values:
 
 ```
 helm inspect values stable/minio >config-old
@@ -194,19 +214,12 @@ Now let's edit the configMap for minio.  There are a few ways we could do this:
 kubectl edit cm fonkfe
 ```
 
-But we will instead use the `helm` way since `helm` is managing `minio`: 
-
-```
-helm get values fonkfe > old_values.yaml
-```
-
-
 Find the spot where the `webhook` is defined and change it to look like the below:
 
 ```json
 "webhook": {
       "1": {
-        "enable": false,
+        "enable": true,
         "endpoint": "http://thumb:8080"
       }
     }
