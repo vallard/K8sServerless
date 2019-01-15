@@ -1,5 +1,7 @@
 import pymongo
 import json, os, time, base64
+import datetime
+from datetime import timedelta
 
 from bson.json_util import dumps as bdumps
 from bson.objectid import ObjectId
@@ -109,7 +111,7 @@ def delete(event, context):
         print(err)
         return json.dumps({"error" : str(err)})
 
-    return list()
+    return list("", "")
 
     
 def get_file_length(filepointer):
@@ -152,4 +154,4 @@ def upload(event, context):
     # put object information into database.
     img_id = collection.insert_one(photo).inserted_id
     #return bdumps({"id": img_id }), 200
-    return get_images()
+    return list("", "")
