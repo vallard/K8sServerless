@@ -24,6 +24,20 @@ Once created click on the three verticle dots to edit the policy. Create a __Rea
 mc mb minio/photobook
 mc policy -r download minio/photobook
 ```
+
+### Get Ingress information
+
+First let's get the IP address of the ingress controller:
+
+```
+kubectl -n ccp get svc nginx-ingress-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}
+```
+This should give you out an IP address such as `10.10.20.207`.  Make note of this IP address.  
+
+We will use the [xip](http://xip.io/) service and a Kubernetes ingress rule so that if we point our browsers to [https://minio.10.10.20.207.xip.io](https://minio.10.10.20.207.xip.io) then it will go straight to minio. 
+
+
+
 ### Configure the Webpage
 
 We need to set the API to the endpoint we set up with our kubeless functions in the serverless section.  Remember we are using the ingress controller to access our functions, so that is the IP address we put in.  If we run: 

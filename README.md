@@ -24,8 +24,8 @@ In this lab we will create a serverless application ontop of an on-prem kubernet
 ### Building a more complex serverless Application
 
 * [Application Overview](photos/OVERVIEW.md)
-* [NodeJS Frontend](photos/README.md)
 * [FaaS Backend](serverless/README.md)
+* [NodeJS Frontend](photos/README.md)
 * [Object Recognition](yolo/README.md)
 
 ## Credits and Shoutouts

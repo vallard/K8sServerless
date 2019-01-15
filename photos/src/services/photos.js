@@ -1,10 +1,13 @@
 //const hname = window.location.hostname
 //export const API = "http://" + hname + ":5000"
-export const API = "http://10.93.140.128.xip.io"
+export const API = "http://10.10.20.207.xip.io"
+export const getAPI = API + "/images/list";
+export const delAPI = API + "/images/delete";
+export const upAPI = API + "/images/upload";
 
 const photoAPI = {
   get() {
-    return fetch(API + '/images', {})
+    return fetch(getAPI, {})
     .then(statusHelper)
     .then(data => {
       return data
@@ -15,7 +18,7 @@ const photoAPI = {
     })
   },
   del(userData) { 
-    return fetch(API + '/images', {
+    return fetch(delAPI, {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',
@@ -35,7 +38,7 @@ const photoAPI = {
     })
   },
   up(userData) {
-    return fetch(API + "/images", {
+    return fetch(upAPI, {
         method: 'POST',
         body:  userData,
     })

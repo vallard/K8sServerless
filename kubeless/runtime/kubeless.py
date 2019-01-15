@@ -64,7 +64,7 @@ def handler():
         data = req.json
     event = {
         'data': data,
-        'file': req.files.get('file'),
+        'file': req.files,
         'event-id': req.get_header('event-id'),
         'event-type': req.get_header('event-type'),
         'event-time': req.get_header('event-time'),

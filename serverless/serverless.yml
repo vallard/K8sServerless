@@ -11,7 +11,7 @@ service: photos
 provider:
   name: kubeless
   defaultDNSResolution: 'xip.io'
-  hostname: 10.93.140.128.xip.io
+  hostname: 10.10.20.207.xip.io
   runtime: python2.7
   environment:
     MONGODB_HOST: "fonkdb-mongodb"
@@ -32,11 +32,17 @@ functions:
    handler: photos.list
    events:
       - http:
-          path: /images
+          path: /images/list
           method: get
   delete:
-   handler: photos.del
+   handler: photos.delete
    events:
       - http:
-          path: /images
+          path: /images/delete
           method: delete
+  upload:
+   handler: photos.upload
+   events:
+      - http:
+          path: /images/upload
+          method: post

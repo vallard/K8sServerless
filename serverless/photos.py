@@ -76,21 +76,19 @@ def get_image(iid):
     """
     Get just one image entry from the database.
     """
-    mongo, minio = setup()
+    minio, mongo = setup()
     collection = mongo[mgo_database][MONGODB_COLLECTION]
     images = [i for i in collection.find({"_id": ObjectId(iid)})]
     return images[0]
 
-
-
-def del(event, contextiid):
+def delete(event, context):
     """
     Remove photo from mongodb and from minio
     """
     iid = event["data"]["id"]
     print("Image to delete: ", iid)
     try: 
-        mongo, minio = setup()
+        minio, mongo = setup()
     except Exception as err:
         return json.dumps({"setup error": str(err)})
 
@@ -113,7 +111,7 @@ def del(event, contextiid):
 
     return list()
 
-
+    
 def get_file_length(filepointer):
     filepointer.seek(0, 2) # go to the end of the file pointer
     file_length = filepointer.tell() # get the length of the file
@@ -123,20 +121,27 @@ def get_file_length(filepointer):
 
 def upload(event, context):
     try:
-        mongo, minio = setup()
+        minio, mongo = setup()
     except Exception as err:
         return json.dumps({"setup error": str(err)})
-    f = event['data']['files']['file'] # get the FileStorage object from the form
-    file_length = get_file_length(f)
+    print("Get data file")
+    f = event['file'] # get the FileStorage object from the form
+    print("bottle file object: ", f)
+    print("bottle file name: ", f.filename)
+    print("bottle file type: ", f.content_type)
+    print("bottle file: ", f.file) 
+    file_size = get_file_length(f.file)
+    print("bottle file size: ", file_size)
+     
     # store the image in minio
     try:
-        minio.put_object("uploads", f.filename, f ,file_length, f.content_type)
+        minio.put_object("uploads", f.filename, f.file , file_size, f.content_type)
     except ResponseError as err:
-        print(err, file=sys.stderr)
+        print(err)
         return json.dumps({"error" : str(err)}), 500
 
     # store the file metadata in mongo
-    collection = mongo["photos"]["entries"]
+    collection = mongo[mgo_database][MONGODB_COLLECTION]
 
     photo = {
         "name" : f.filename,
