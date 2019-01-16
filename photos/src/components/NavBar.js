@@ -27,6 +27,7 @@ const NavBar = ({photo}) => (
     </div>
     </div>
   </nav>
+    <Route exact path="/" component={Photos} />
     <Route exact path="/photobook/index.html" component={Photos} />
   <Footer />
   </div>

@@ -22,7 +22,12 @@ const Home = ({photos,uploadFunc, delFunc}) => (
                 { photo.objects == null ? 
                     <br/>
                     :
-                    <div className="card-text">{photo.objects.toString()}</div>
+                    <div>
+                      Detected Objects
+                    { photo.objects.map( (obj, j) => (
+                      <div className="card-text" key={i+ "-" + j}>{obj.item} <small>{parseFloat(obj.score * 100).toFixed(2)}%</small></div>
+                    ))}
+                    </div>
                 }
                 <button className="btn btn-sm btn-outline-danger" id={i} onClick={delFunc}>Delete</button>
               </div>

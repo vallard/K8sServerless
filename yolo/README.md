@@ -56,6 +56,12 @@ Currently it stands alone as a seperate service.  We could have it be called as 
 
 ## Kafka
 
+We could install kafka using helm or other ways but we will use the sample kubeless version as it hooks everything up for us. 
+
+```
+export RELEASE=$(curl -s https://api.github.com/repos/kubeless/kafka-trigger/releases/latest | grep tag_name | cut -d '"' -f 4)
+kubectl create -f https://github.com/kubeless/kafka-trigger/releases/download/$RELEASE/kafka-zookeeper-$RELEASE.yaml
+
 ```
 helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator
 helm install --name my-kafka incubator/kafka
@@ -64,48 +70,37 @@ helm install --name my-kafka incubator/kafka
 Now we can use it.
 
 ```
+kubectl create -f https://raw.githubusercontent.com/vallard/K8sServerless/master/yolo/kafka-testclient.yaml
+```
 
+We can now list the different topics within it:
 
 ```
-You can connect to Kafka by running a simple pod in the K8s cluster like this with a configuration like this:
-
-  apiVersion: v1
-  kind: Pod
-  metadata:
-    name: testclient
-    namespace: default
-  spec:
-    containers:
-    - name: kafka
-      image: confluentinc/cp-kafka:5.0.1
-      command:
-        - sh
-        - -c
-        - "exec tail -f /dev/null"
-
-Once you have the testclient pod above running, you can list all kafka
-topics with:
-
   kubectl -n default exec testclient -- /usr/bin/kafka-topics --zookeeper my-kafka-zookeeper:2181 --list
+```
 
-To create a new topic:
+Now we can listen for messages on the topic.  In this case 
 
-  kubectl -n default exec testclient -- /usr/bin/kafka-topics --zookeeper my-kafka-zookeeper:2181 --topic test1 --create --partitions 1 --replication-factor 1
-
-To listen for messages on a topic:
-
-  kubectl -n default exec -ti testclient -- /usr/bin/kafka-console-consumer --bootstrap-server my-kafka:9092 --topic test1 --from-beginning
-
-To stop the listener session above press: Ctrl+C
-
-To start an interactive message producer session:
-  kubectl -n default exec -ti testclient -- /usr/bin/kafka-console-producer --broker-list my-kafka-headless:9092 --topic test1
-
-To create a message in the above session, simply type the message and press "enter"
-To end the producer session try: Ctrl+C
-
+To create the `uploads` topic if it hasn't been created:
 
 ```
+  kubectl -n default exec testclient -- /usr/bin/kafka-topics --zookeeper my-kafka-zookeeper:2181 --topic uploads --create --partitions 1 --replication-factor 1
+```
+
+Now we will listen to the messages on this topic
+
+```
+  kubectl -n default exec -ti testclient -- /usr/bin/kafka-console-consumer --bootstrap-server my-kafka:9092 --topic uploads --from-beginning
+```
+
+Here when you upload a new image using the app you'll see an event name:
+
+```json
+{"EventName":"s3:ObjectCreated:Put","Key":"uploads/Fortnite-Small.png","Records":[{"eventVersion":"2.0","eventSource":"minio:s3","awsRegion":"us-east-1","eventTime":"2019-01-16T06:28:20Z","eventName":"s3:ObjectCreated:Put","userIdentity":{"principalId":"AKIAIOSFODNN7EXAMPLE"},"requestParameters":{"accessKey":"AKIAIOSFODNN7EXAMPLE","region":"us-east-1","sourceIPAddress":"10.10.20.116"},"responseElements":{"x-amz-request-id":"157A40482507E473","x-minio-origin-endpoint":"http://127.0.0.1:9000"},"s3":{"s3SchemaVersion":"1.0","configurationId":"Config","bucket":{"name":"uploads","ownerIdentity":{"principalId":"AKIAIOSFODNN7EXAMPLE"},"arn":"arn:aws:s3:::uploads"},"object":{"key":"Fortnite-Small.png","size":223865,"eTag":"dae67bfdbc2778805c9ee4daee42aadd","contentType":"image/png","userMetadata":{"content-type":"image/png"},"versionId":"1","sequencer":"157A4048256B4083"}},"source":{"host":"","port":"","userAgent":"Minio (Linux; x86_64) minio-py/4.0.9"}}]}
+```
+To stop the listener session above press: `Ctrl+C`
+
+
 
 Turn minio into a kafka producer.  It writes on the `uploads` topic.  Run the command:
 
@@ -113,18 +108,31 @@ Turn minio into a kafka producer.  It writes on the `uploads` topic.  Run the co
 mc event add minio/uploads arn:minio:sqs:us-east-1:1:kafka --event put
 ```
 
-Now we need to have our function trigger when topics are pushed
+
+Let's create a function that can be called when a message is created.  This is called 
 
 ```
-kubeless function deploy test --runtime python2.7 \
-                                --handler test.foobar \
-                                --from-file test.py
+kubeless function deploy rek --runtime python2.7 \
+                    --handler id.process_event \
+                    --dependencies requirements.txt \
+                    --from-file rek.py
 ```
 
+Now we need to have our function trigger when topics are pushed.
 
 
 ```
-kubeless trigger kafka create test --function-selector created-by=kubeless,function=test --trigger-topic test-topic
+kubeless trigger kafka create rek --function-selector created-by=kubeless,function=rek --trigger-topic uploads
+```
+
+Now you should be able to upload an image.  Then after waiting a bit if you refresh the page you will see that it tries to recognize the objects it sees in the page. 
+
+## Exercise
+
+To update the function:
+
+```
+kubeless function update rek -f rek.py
 ```
 
 

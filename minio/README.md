@@ -90,7 +90,7 @@ Open this file with your favorite editor and change the host entry from `minio.1
 Deploy the ingress controller with: 
 
 ```
-kubect create -f minio-ing.yaml
+kubectl create -f minio-ing.yaml
 ```
 
 Now you should be able to open a browser to the minio web page.
