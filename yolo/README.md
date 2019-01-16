@@ -11,7 +11,50 @@ Object Recognition in photos has made many advances in the last several years.  
 
 We will take an implementation of this algorithm that has already been trained and use that model to do object recognition inside our photos that we upload.  We will then tag the data in our photos with the objects that the algorithm recognizes.
 
-## Add Kafka
+## Install YOLO Detector
+
+I have made a small application for you called [YOLO Detector](https://github.com/vallard/YOLO-Detector).  It embeds the YOLO algorithm and model in a Tensorflow implementation and does the image detection for you.  Because it is small it doesn't recognize many things.  It can do: 
+
+
+* aeroplane
+* bicycle
+* bird
+* boat
+* bottle
+* bus
+* car
+* cat
+* chair
+* cow
+* diningtable
+* dog
+* horse
+* motorbike
+* person
+* pottedplant
+* sheep
+* sofa
+* train
+* tvmonitor
+
+So don't expect too much!  
+
+Let's install it by running:
+
+```
+kubectl apply -f https://raw.githubusercontent.com/vallard/YOLO-Detector/master/manifests/yolo-detector.yaml
+```
+This will create a deployment and a service in Kubernetes called `yolo`.  It may take a while to pull as the image is about 2GB.  This is because the model is big. 
+
+
+
+## Hooking Things up
+
+We have a service that can be called.  But how do we hook it up to the rest of the environment?  
+
+Currently it stands alone as a seperate service.  We could have it be called as another webhook similar to how the image is called.  But why not go for scale here and instead use kafka?  That way we can create a pubsub mechanism to deal with scale.  
+
+## Kafka
 
 ```
 helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator
@@ -20,6 +63,7 @@ helm install --name my-kafka incubator/kafka
 
 Now we can use it.
 
+```
 You can connect to Kafka by running a simple pod in the K8s cluster like this with a configuration like this:
 
   apiVersion: v1
@@ -58,40 +102,29 @@ To create a message in the above session, simply type the message and press "ent
 To end the producer session try: Ctrl+C
 
 
+```
 
-
-## Install YOLO Detector
-
-I have made a small application for you called [YOLO Detector](https://github.com/vallard/YOLO-Detector).  It embeds the YOLO algorithm and model in a Tensorflow implementation and does the image detection for you.  Because it is small it doesn't recognize many things.  It can do: 
-
-
-* aeroplane
-* bicycle
-* bird
-* boat
-* bottle
-* bus
-* car
-* cat
-* chair
-* cow
-* diningtable
-* dog
-* horse
-* motorbike
-* person
-* pottedplant
-* sheep
-* sofa
-* train
-* tvmonitor
-
-So don't expect too much!  
-
-Let's install it by running:
+Turn minio into a kafka producer.  It writes on the `uploads` topic.  Run the command:
 
 ```
-kubectl apply -f https://raw.githubusercontent.com/vallard/YOLO-Detector/master/manifests/yolo-detector.yaml
+mc event add minio/uploads arn:minio:sqs:us-east-1:1:kafka --event put
 ```
-This will create a deployment and a service in Kubernetes called `yolo`.  It may take a while to pull as the image is about 2GB.  This is because the model is big. 
 
+Now we need to have our function trigger when topics are pushed
+
+```
+kubeless function deploy test --runtime python2.7 \
+                                --handler test.foobar \
+                                --from-file test.py
+```
+
+
+
+```
+kubeless trigger kafka create test --function-selector created-by=kubeless,function=test --trigger-topic test-topic
+```
+
+
+## Reference
+
+[https://kubeless.io/docs/pubsub-functions/#kafka](https://kubeless.io/docs/pubsub-functions/#kafka)

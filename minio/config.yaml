@@ -276,7 +276,7 @@ minioConfig:
     database: ""
   kafka:
     enable: true
-    brokers: "kafka"
+    brokers: '["my-kafka:9092"]'
     topic: "uploads"
   webhook:
     enable: true

@@ -22,7 +22,7 @@ const Home = ({photos,uploadFunc, delFunc}) => (
                 { photo.objects == null ? 
                     <br/>
                     :
-                    <div className="card-text">{photo.objects}</div>
+                    <div className="card-text">{photo.objects.toString()}</div>
                 }
                 <button className="btn btn-sm btn-outline-danger" id={i} onClick={delFunc}>Delete</button>
               </div>
