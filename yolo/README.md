@@ -64,6 +64,9 @@ helm install --name my-kafka incubator/kafka
 Now we can use it.
 
 ```
+
+
+```
 You can connect to Kafka by running a simple pod in the K8s cluster like this with a configuration like this:
 
   apiVersion: v1
