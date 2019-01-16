@@ -275,9 +275,9 @@ minioConfig:
     password: ""
     database: ""
   kafka:
-    enable: false
-    brokers: "null"
-    topic: ""
+    enable: true
+    brokers: "kafka"
+    topic: "uploads"
   webhook:
     enable: true
     endpoint: "http://thumb:8080"

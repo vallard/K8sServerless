@@ -44,7 +44,7 @@ def enable_cors(fn):
     def _enable_cors(*args, **kwargs):
         # set CORS headers
         bottle.response.headers['Access-Control-Allow-Origin'] = '*'
-        bottle.response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS'
+        bottle.response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
         bottle.response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
 
         if bottle.request.method != 'OPTIONS':
@@ -64,7 +64,7 @@ def handler():
         data = req.json
     event = {
         'data': data,
-        'file': req.files,
+        'files': req.files,
         'event-id': req.get_header('event-id'),
         'event-type': req.get_header('event-type'),
         'event-time': req.get_header('event-time'),

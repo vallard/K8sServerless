@@ -11,7 +11,7 @@ service: photos
 provider:
   name: kubeless
   defaultDNSResolution: 'xip.io'
-  hostname: 10.10.20.207.xip.io
+  hostname: 10.10.20.207.xip.io # this should be the IP address of the LoadBalancer of the ingress controller
   runtime: python2.7
   environment:
     MONGODB_HOST: "fonkdb-mongodb"
@@ -19,7 +19,8 @@ provider:
     MONGODB_NAME: "photos"
     MONGODB_COLLECTION: "entries"
     MONGODB_SECRETS: "fonkdb-mongodb"
-    MINIO_HOST: "fonkfe:9000"
+    #MINIO_HOST: "fonkfe:9000"
+    MINIO_HOST: "10.10.20.208:9000"  # this should be the public svc address of the minio service
     MINIO_SECRETS: "fonkfe"
     MINIO_BUCKET: "uploads"
 
@@ -30,18 +31,25 @@ plugins:
 functions:
   list:
    handler: photos.list
+   environment:
+    MINIO_HOST: "10.10.20.208:9000"  # this should be the public svc address of the minio service
+
    events:
       - http:
           path: /images/list
           method: get
   delete:
    handler: photos.delete
+   environment:
+    MINIO_HOST: "10.10.20.208:9000"  # this should be the public svc address of the minio service
    events:
       - http:
           path: /images/delete
           method: delete
   upload:
    handler: photos.upload
+   environment:
+    MINIO_HOST: "10.10.20.208:9000"  # this should be the public svc address of the minio service
    events:
       - http:
           path: /images/upload

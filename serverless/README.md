@@ -25,6 +25,12 @@ Next, take this IP address and put it into the `serverless.yaml` file appending 
 ...
 ```
 
+You'll also notice below where it has the `MINIO_HOST`.  This should be set to the minio IP address:
+
+```
+  MINIO_HOST: "minio.10.10.20.207.xip.io"
+```
+
 Now we can deploy the function
 
 ```

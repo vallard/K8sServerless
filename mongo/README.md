@@ -62,7 +62,7 @@ export MONGODB_ROOT_PASSWORD=$(kubectl get secret --namespace default fonkdb-mon
 The password for `sls` is:
 
 ```
-export MONGODB_PASSWORD=$(kubectl get secret --namespace default fonkdb-mongodb -o jsonpath="{.data.mongodb-password}" | base64 --decode)
+export MONGODB_PASSWORD=$(kubectl get secret --namespace default fonkdb-mongodb -o jsonpath="{.data.mongodb-root-password}" | base64 --decode)
 ```
 
 Now we can connect with: 

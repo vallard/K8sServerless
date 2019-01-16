@@ -17,7 +17,7 @@ MONGODB_PORT = os.environ.get("MONGODB_PORT") or 27017
 MONGODB_COLLECTION = os.environ.get("MONGODB_COLLECTION") or "entries"
 MONGODB_SECRETS = os.environ.get("MONGODB_SECRETS") or "fonkdb-mongodb"
 
-MINIO_HOST = os.environ.get("MINIO_HOST") or "fonkfe:9000"
+MINIO_HOST = os.environ.get("MINIO_HOST") #or "fonkfe:9000"
 MINIO_SECRETS = os.environ.get("MINIO_SECRETS") or "fonkfe"
 MINIO_BUCKET = os.environ.get("MINIO_BUCKET") or "uploads"
 mgo_database = "photos"
@@ -87,8 +87,9 @@ def delete(event, context):
     """
     Remove photo from mongodb and from minio
     """
+    print("Event data: ", event["data"])
     iid = event["data"]["id"]
-    print("Image to delete: ", iid)
+    print("Image ID to delete: ", iid)
     try: 
         minio, mongo = setup()
     except Exception as err:
@@ -100,7 +101,6 @@ def delete(event, context):
         image = get_image(iid)
         result = collection.delete_one({'_id' : ObjectId(iid)})
         print(result)
-        return result
     except Exception as err:
         return json.dumps({"error": str(err)})
 
@@ -127,7 +127,7 @@ def upload(event, context):
     except Exception as err:
         return json.dumps({"setup error": str(err)})
     print("Get data file")
-    f = event['file'] # get the FileStorage object from the form
+    f = event['files']['file'] # get the FileStorage object from the form
     print("bottle file object: ", f)
     print("bottle file name: ", f.filename)
     print("bottle file type: ", f.content_type)
@@ -137,6 +137,7 @@ def upload(event, context):
      
     # store the image in minio
     try:
+        print("putting minio")
         minio.put_object("uploads", f.filename, f.file , file_size, f.content_type)
     except ResponseError as err:
         print(err)
@@ -145,12 +146,17 @@ def upload(event, context):
     # store the file metadata in mongo
     collection = mongo[mgo_database][MONGODB_COLLECTION]
 
+    # upload image
+    url = minio.presigned_get_object('uploads', f.filename, expires=timedelta(days=5)) 
+    print(url)
+    print("MINIO_HOST IS: ", MINIO_HOST)
+    url = url.replace("fonkfe:9000", MINIO_HOST)
+    print(url)
     photo = {
         "name" : f.filename,
         "date" : datetime.datetime.utcnow(),
-        "url" : minio.presigned_get_object('uploads', f.filename, expires=timedelta(days=5))
+        "url" : url
     }
-
     # put object information into database.
     img_id = collection.insert_one(photo).inserted_id
     #return bdumps({"id": img_id }), 200
