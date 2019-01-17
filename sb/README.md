@@ -1,4 +1,4 @@
-# DEVNET Sandbox
+# 1. DEVNET Sandbox
 
 We need a quick and free Kubernetes to start our application development.  You could
 use a laptop with [minikube](https://github.com/kubernetes/minikube) and if that's your
@@ -42,12 +42,22 @@ At this point you should be ready to login to the Cisco Container Platform dashb
 
 __User/Password:__ `admin/Cisco123`
 
+![ccp](../images/sb04.png)
+
+![ccp login](../images/sb05.png)
+
+
 ### VMware vCenter
 [ https://10.10.20.12]( https://10.10.20.12)
 
 __User/Password:__ `administrator@vsphere.local/Cisco123!`
 
+![vcenter](../images/sb06.png)
 
 
+## Where to next?
+
+* [Home](../README.md)
+* [Next Module: CCP Kubernetes](../kubernetes/README.md)
 
 

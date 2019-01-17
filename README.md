@@ -12,6 +12,7 @@ The photobook will also incorporate an object recognition service and tag object
 
 ![img](images/arch01.png)
 
+Below are the contents of the two sections in our course.  You can refer back to this page to view your progression through this wonderful world of serverless!
 
 ## Part I: Building the Platform
 
