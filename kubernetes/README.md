@@ -209,11 +209,40 @@ get svc -n ccp nginx-ingress-controller
 
 This ingress controller has an `EXTERNAL-IP`.  We can make a rule that when someone goes to that IP address (or dns) we can layer 7 route it to the `ngx1` application. 
 
+[Download the ingress controller yaml](https://raw.githubusercontent.com/vallard/K8sServerless/master/kubernetes/ngx1-ing.yaml) file and open it up to edit it.  
 
+We are using [xip.io](https://xip.io) to redirect since we don't have an external domain name associated with our IP addresses.  
+
+Change the IP address to match the IP address of your `EXTERNAL-IP` of the ingress controller you found above.  Keep the xip.io extension at the end:
+
+```yaml
+  ...
+  - host: ngx1.10.10.20.200.xip.io  #<- change this line
+  ...
+```
+
+Next apply the kubernetes configuration with:
+
+```
+kubectl create -f ngx1-ing.yaml
+```
+Assuming you were able to change the `ngx` `svc` then you will be able to see that it is routing to your backend pods:
+
+```
+kubectl get ing
+```
+
+Now you should be able to open the browser again to: 
+
+[http://ngx1.10.10.20.200.xip.io/](http://ngx1.10.10.20.200.xip.io/) and see the same happy nginx page.  __Note:__ you should make sure its your ingress controller service IP address that you point it to. 
+
+## 2.4 Conclusion	
+
+This concludes our brief tour of kubernetes.  We will be using services, pods, deployments, ingress controllers and some other things we didn't cover as well later on. We just need to add some more infrastructure components before we can construct our application!
 
 
 ## Where to next?
 
-* [Home](../README.md)
-* [Previous: Cisco Sandbox](../sb/README)
+* [Go Back Home](../README.md)
+* [Previous Module: Cisco Sandbox](../sb/README)
 * [Next Module: What the Helm?](../helm/README.md)

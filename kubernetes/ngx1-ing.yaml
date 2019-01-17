@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: fonkfe
+  name: ngx1
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
