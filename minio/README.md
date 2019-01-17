@@ -1,14 +1,17 @@
-# Minio
+# 5. Minio
 
-Our object store can be configured with: 
+For our application we need a place to store pictures.  Object storage is good for this because it is simple and readily available.  S3 is perhaps the most used AWS service because of its availability and cheap price.  For on-prem we can use an open source project called [Minio](https://minio.io/) that not only works on prem but can configure our cloud based object storage as well such as s3 and gcs.  
+
+## 5.1 Create a Minio Object Storage System
+
+Creating an instance of minio with helm is simple. We have, however, added an additional configuration to the service to modify things slightly for our application.  To install this we run: 
 
 ```
 helm install stable/minio --name fonkfe -f https://raw.githubusercontent.com/vallard/K8sServerless/master/minio/config.yaml
 ```
+ 
 
-We've added some configuration information in this file we will go over later.  
-
-### An aside...
+### 5.1.1 An aside...
 If you wanted to customize minio, you can edit the helm chart config.  You can start by getting the default chart config with:
 
 ```
@@ -20,162 +23,59 @@ You could then change values and update it with:
 helm upgrade -f minio-helm-config.yaml fonkfe stable/minio
 ```
 
+##### Challenge 5.1: What did we change from the default configuration? 
+
+## 5.2 Verify Minio is up
+
 Ok, let's see if minio is up: 
 
 ```
-kubectl get pods
+kubectl get pods -l app=minio
 ```
 
 This returns: 
 
 ```
-...
 fonkfe-544ddf6b86-qpcwf          1/1       Running   0          18m
-...
 ```
 Be sure your pods are `Running` so that things work. 
 
-## Accessing Minio
+## 5.3 Accessing Minio
 
-Now we want to be able to connect to the frontend from the public Internet.  (Well we are behind a VPN, but the idea is the same).  In order to do this there are two ways we could expose our minio instance.  The first is to use a LoadBalancer `EXTERNAL-IP` which is easy, the second is to use an ingress rule.
+Now we want to be able to connect to the frontend from the public Internet.  (Well we are behind a VPN, but the idea is the same).  In order to do this there are two ways we could expose our minio instance.  The first is to use a LoadBalancer `EXTERNAL-IP` which is easy, the second is to use an ingress rule as we showed in the [Kubernetes Lab](../kubernetes/README.md).  In our helm chart we already configured this to be of type `LoadBalancer` so you should see an `EXTERNAL-IP` already for your instance of minio. 
 
-### (option 1) LoadBalancer
-
-We edit the service by adding the `LoadBalancer` field to it.  
-
-```
-kubectl edit svc fonkfe
-```
-Where you will see:
-
-```
-...
-  type: ClusterIP
-...
-```
-Change it to be:
-
-```
-  type: LoadBalancer
-```
-
-Write changes and save. An IP address will be assigned.  View it with `kubectl get svc fonkfe`.  You can enter this IP address in the browser, along with the port `9000` to get on to the minio dashboard. 
-
-e.g: `http://10.10.20.208:9000`
+##### Challenge 5.2: What is the external IP address of Minio?
 
 
-### (option 2) Access With Ingress
+## 5.4 Log in to minio browser
 
-CCP already comes with an [ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress/) installed.  To use it we just need to make a rule. 
-
-First let's get the IP address of the ingress controller:
-
-```
-kubectl -n ccp get svc nginx-ingress-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}
-```
-This should give you out an IP address such as `10.10.20.207`.  Make note of this IP address.  
-
-We will use the [xip](http://xip.io/) service and a Kubernetes ingress rule so that if we point our browsers to [https://minio.10.10.20.207.xip.io](https://minio.10.10.20.207.xip.io) then it will go straight to minio. 
- 
-An ingress rule is pretty simple.  We specify the name of the service, the route, and the DNS name we expect.  You can download the ingress rule at the main source site. 
-
-#### Download Ingress Rule
-
-```
-wget https://raw.githubusercontent.com/vallard/K8sServerless/master/minio/minio-ing.yaml
-```
-
-Open this file with your favorite editor and change the host entry from `minio.10.10.20.207.xip.io` to your host ingress controller IP address that you copied from above. 
-
-Deploy the ingress controller with: 
-
-```
-kubectl create -f minio-ing.yaml
-```
-
-Now you should be able to open a browser to the minio web page.
-
-![img](../images/minio01.png)
-
-## Log in to minio
-
-To log in we need the access key and the secret key.  These are stored in the minio secrets file.  You can grab them as follows: 
-
-```
-kubectl get secret fonkfe -o yaml
-```
-
-Here we get the output similar to as follows:
-
-```yaml
-apiVersion: v1
-data:
-  accesskey: QUtJQUlPU0ZPRE5ON0VYQU1QTEU=
-  secretkey: d0phbHJYVXRuRkVNSS9LN01ERU5HL2JQeFJmaUNZRVhBTVBMRUtFWQ==
-kind: Secret
-metadata:
-  creationTimestamp: 2018-12-18T23:43:44Z
-  labels:
-    app: minio
-    chart: minio-2.2.0
-    heritage: Tiller
-    release: fonkfe
-  name: fonkfe
-  namespace: default
-  resourceVersion: "816207"
-  selfLink: /api/v1/namespaces/default/secrets/fonkfe
-  uid: c193e532-031e-11e9-906a-005056a52355
-type: Opaque
-```
-
-These secrets are base64 encoded.  They are:
+To log in we need the access key and the secret key.  These are stored in the minio secrets file.  You can grab them by examining the `fonkfe` secrets file and base64 decoding the secrets.  However, we have the defaults so we will forgo any decoding exercises for now.  The credentials are:
 
 ```
 Access Key: AKIAIOSFODNN7EXAMPLE 
 Secret Key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 ```
 
-Use these to log into your minio dashboard.  For information, you can get these keys to be not base64 encoded by decoding them.  Decoding them is done like so: 
 
-```
-echo "secret" | base64 decode
-```
-e.g. in the above: 
+Log into minio with these values at the IP address you found in __challenge 5.2__.  Notice that minio isn't accessible on port `80`.  How can you find out which port to access minio? 
 
-```
-echo QUtJQUlPU0ZPRE5ON0VYQU1QTEU= | base64 --decode
-```
-Which gives us the output of: 
+![minio](../images/minio01.png)
 
-```
-AKIAIOSFODNN7EXAMPLE
-```
+Once logged in you'll see the contents available to you. At this point, there should be nothing!
 
-Similarly we need to get the secret decoded of the `secretkey`
+![minio inside](../images/minio02.png)
 
-```
-echo d0phbHJYVXRuRkVNSS9LN01ERU5HL2JQeFJmaUNZRVhBTVBMRUtFWQ== | base64 --decode
-```
+## 5.5 Minio Command Line Client
 
-Which gives us the output of:
-
-```
-wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-```
-
-Log into minio with these values.
-
-### Minio Command Line Client
-
-While GUI's are nice they are hard to right automation tools against.  Let's use the command line client to interact with minio. 
+While GUI's are nice they are hard for automation tools to interact with.  Let's use the command line client to interact with minio. 
 
 [Download the latest client](https://docs.minio.io/docs/minio-client-complete-guide) for your Operating System
 
-#### Windows
+### 5.5.1 Windows
 
 Download the `mc.exe` command 
 
-#### Mac
+### 5.5.2 Mac
 
 Use homebrew or download the binary
 
@@ -183,12 +83,12 @@ Use homebrew or download the binary
 brew install minio/stable/mc
 ```
 
-### Configure Minio Command line
+## 5.6 Configure and Verify Minio Command line
 
 Define the environment variables
 
 ```
-export MINIO_HOST=http://minio.10.10.20.207.xip.io
+export MINIO_HOST=http://10.10.20.201:9000
 export ACCESS_KEY=AKIAIOSFODNN7EXAMPLE
 export SECRET_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 ```
@@ -207,13 +107,12 @@ mc config host list
 Some of these come by default but are not configured (like the `s3` and `gcs`), others like the `play` give you an environment you can mess around in.
 
 
-### Test Minio Upload
+## 5.7 Test Minio Upload
 
 take a picture and copy picture to your computer desktop, then use minio to upload the picture
 
 ```
 mc mb minio/test
-mc policy 
 mc cp ~/Desktop/IMG_0952.JPG minio/test/
 ```
 
@@ -225,6 +124,7 @@ Output will show something uploading:
 
 You should verify that the image was properly placed in the storage bucket in the web interface. 
 
+## 5.8 Conclusion
 
 With Minio up we now have object storage.  While this is a quick way to set it up, this is not good for production.  We would like to be able to make sure that the volumes persist if the container goes down or if even the host goes down.  We can do this with persistent volumes and persistent volume claims.  In addition we could use more minio nodes to provide the scale and availability for our cluster.
 
@@ -234,3 +134,9 @@ With Minio up we now have object storage.  While this is a quick way to set it u
 
 * [https://blog.minio.io/lambda-computing-with-minio-and-kafka-de928897ccdf](https://blog.minio.io/lambda-computing-with-minio-and-kafka-de928897ccdf)
 * [https://docs.minio.io/docs/minio-bucket-notification-guide](https://docs.minio.io/docs/minio-bucket-notification-guide)
+
+## Where to next?
+
+* [Go Back Home](../README.md)
+* [Previous Module: MongoDB](../mongo/README.md)
+* [Next Module: Kubeless](../kubeless/README.md)
