@@ -44,6 +44,171 @@ In the [previous module](../sb/README.md) you opened a web page to CCP.  On this
 
 ![CCP Cluster](../images/k8s01.png)
 
+This will save a file named `kubeconfig.yaml`.  To make use of this with `kubectl` make a directory in your home directory called `.kube` (don't forget the period as part of the name).  Then move the `kubeconfig.yaml` to `.kube/config`.  
+
+### 2.2.1 Windows Example
+
+### 2.2.2 Mac Example
+
+```
+mkdir -p ~/.kube
+mv ~/Downloads/kubeconfig.yaml ~/.kube/config
+```
+
+### 2.2.3 Verify `kubectl` connectivity to cluster
+
+To make sure you are connected run the command:
+
+```
+kubectl cluster-info
+```
+
+This should return the information about your cluster:
+
+```
+Kubernetes master is running at https://10.10.20.208:6443
+KubeDNS is running at https://10.10.20.208:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+```
+
+If you are not connected to your cluster quite yet, get help before moving to the next step.  
+
+## 2.3 A whirlwind tour of Kubernetes
+
+Now that we have kubernetes up and running and we can connect to it its time to start running some applications.  
+
+If you are familiar with docker commands you will find many similarities with `kubectl` commands.  
+
+### 2.3.1 Namespaces
+
+Each cluster can have multiple namespaces.  A namespace is a logical way to seperate a group of applications or resources.  We can see all the namespaces by typing:
+
+```
+kubectl get namespaces
+```
+Here you will see 4:
+```
+NAME          STATUS    AGE
+ccp           Active    2d
+default       Active    2d
+kube-public   Active    2d
+kube-system   Active    2d
+```
+
+Kubernetes resources (like Pods, Config Maps, Secrets, etc) live in a namespace.  
+
+Let's create a namespace called `test`
+
+```
+kubectl create namespace test
+kubectl get ns test
+```
+
+##### Challenge 2.1: Delete the test namespace.  
+
+### 2.3.2 Pods
+
+Let's take a look at all the pods in our current namespace:
+
+```
+kubectl get pods
+```
+
+As you can see there are not any.  But I assure you there are pods running, just not in your namespace. 
+
+Kubernetes runs inside kubernetes.  Those resources in CCP and most kubernetes distributions run inside the `kube-system` namespace.  We can look at all the pods in there by running:
+
+```
+kubectl get pods -n kube-system
+```
+
+You will see quite a few containers running here.  These are the containers that keep kubernetes running. 
+
+##### Challenge 2.2:  How can you list all pods in all namespaces?  (hint: kubectl get --help)
+
+
+##### Challenge 2.3: How can you list all the details about a pod, including it's IP address what node it is running on?
+
+##### Challenge 2.4: How can you watch for new pods or changes to the pods in a continuous loop using kubectl?
+
+### 2.3.3 Deployments
+
+Deployments tell pods how they should be deployed.  Let's deploy an Nginx service.  
+
+```
+kubectl run ngx1 --image=nginx --replicas=3
+```
+This will deploy 3 nginx pods.  You'll see them all ready as it downloads. 
+
+We can kill some of the pods and they will be recreated. Kill one of your pods by running: 
+
+```
+kubectl delete pod <pod name>
+```
+
+You'll see it deleted and then a new one will be created in its place.  This is one of the great points about kubernetes.  We declair what we want and if anything is found out of sync then it makes it right again.  We told our deployment when we created it we wanted to have 3 replicas.  Kubernetes will try to ensure there are always 3 replicas running.   
+
+##### Challenge 2.5: Scale the deployment to 4 replicas. (Hint: kubectl scale --help)
+
+### 2.3.4 Services
+
+Our pods may go up and down as we update the application.  As they go up and down the names and IP addresses of the pods change.  We want to ensure that other applications are able access our application by one consistent name.  Later we will deploy MongoDB and our applications will need to know the consistent name they can reach Mongo from.  Kubernetes provides the concept of a [service](https://kubernetes.io/docs/concepts/services-networking/service/).  It's basically like a virtual IP address that will load balance (round robin) between all the pods backing it.  
+
+Let's create a service:
+
+```
+kubectl expose --port 80 deployment ngx1
+```
+
+This will create a service we can see with:
+
+```
+kubectl get svc
+```
+
+We notice that the ngx1 service has no external IP address.  Therefore, we can't see it from the outside.  We can change that by giving the service a [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) IP address.  By default they are just given cluster internal IP addresses.  
+
+To change this we run:
+
+```
+kubectl edit svc ngx1
+```
+We will be placed into a text editor. At the bottom of the file you will see (about line 25):
+
+```yaml
+  type: ClusterIP
+```
+
+Change this to be:
+
+```yaml
+  type: LoadBalancer
+```
+Saving this file will make the changes happen in Kubernetes.  To see the output run:
+
+```
+kubectl get svc
+```
+
+You'll see an `EXTERNAL-IP` address you can now access.  Point your web browser to this:
+
+![ngx1](../images/k8s02.png)
+
+### 2.3.5 Ingress
+
+CCP comes installed with an Ingress Controller.  An ingress controller allows trafic from the outside to be routed into services inside the cluster.  For example, if we had an app but we wanted one of the directories to be `/blog` we might want traffic coming into the app with the `/blog` directory to get routed to a different application.  It would look from the outside like the same application but internally it would run on different pods. 
+
+Let's illustrate with an example. 
+
+##### Challenge 2.6: Change the `ngx1` service back into type ClusterIP
+
+With the service back to cluster IP we can't access it from the outside.  However, we have an ingress controller:
+
+```
+get svc -n ccp nginx-ingress-controller
+```
+
+This ingress controller has an `EXTERNAL-IP`.  We can make a rule that when someone goes to that IP address (or dns) we can layer 7 route it to the `ngx1` application. 
+
 
 
 
