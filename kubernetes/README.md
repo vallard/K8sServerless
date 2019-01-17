@@ -226,6 +226,7 @@ Next apply the kubernetes configuration with:
 ```
 kubectl create -f ngx1-ing.yaml
 ```
+
 Assuming you were able to change the `ngx` `svc` then you will be able to see that it is routing to your backend pods:
 
 ```
@@ -244,5 +245,5 @@ This concludes our brief tour of kubernetes.  We will be using services, pods, d
 ## Where to next?
 
 * [Go Back Home](../README.md)
-* [Previous Module: Cisco Sandbox](../sb/README)
+* [Previous Module: Cisco Sandbox](../sb/README.md)
 * [Next Module: What the Helm?](../helm/README.md)
