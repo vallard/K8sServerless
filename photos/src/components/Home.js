@@ -14,11 +14,6 @@ const Home = ({photos,uploadFunc, delFunc}) => (
                   <img src={photo.url} className="card-img-top" alt={i + "-" + photo.name} />
               }
               <div className="card-body">
-                { photo.date == null ?
-                    <br/>
-                    :
-                    <div className="card-title small">{Date(photo.date).toLocaleString()}</div>
-                }
                 { photo.objects == null ? 
                     <br/>
                     :

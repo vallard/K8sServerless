@@ -6,47 +6,6 @@ body{
   -webkit-font-smoothing: antialiased;
 }
 
-/* main nav bar on top */
-/*
-.navbar-inverse {
-  background-color: #293038;
-  height: 50px;
-}
-.navbar-inverse .navbar-text {
-  color: #fff;
-  letter-spacing: 1px;
-  margin-left: 40px;
-  float: left;
-
-}
-
-.navbar-nav .nav-link {
-  color: #fff;
-  text-decoration: underline;
-}
-
-a .fa {
-  color: #fff;
-}
-
-.navbar-light {
-  background-color: #fff;
-  height: 40px;
-}
-*/
-
-.stepsbar {
-  color: #222;
-}
-
-.stepsbar a {
-  color: #222;
-}
-
-.stepsbar .active {
-  border-bottom: 1px solid #2f87c0;
-}
-
 .main-panel {
   margin-top: 40px;
 

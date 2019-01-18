@@ -141,7 +141,6 @@ def upload(event, context):
         minio.put_object("uploads", f.filename, f.file , file_size, f.content_type)
     except ResponseError as err:
         print(err)
-        print("can't upload {0} to the 'uploads' directory is {1} the right minio IP address?".format(f.filename, MINIO_HOST ))
         return json.dumps({"error" : str(err)}), 500
 
     # store the file metadata in mongo
@@ -153,9 +152,9 @@ def upload(event, context):
     print("MINIO_HOST IS: ", MINIO_HOST)
     url = url.replace("fonkfe:9000", MINIO_HOST)
     print(url)
-    # data we want to upload to the image. 
     photo = {
         "name" : f.filename,
+        "date" : datetime.datetime.utcnow(),
         "url" : url
     }
     # put object information into database.

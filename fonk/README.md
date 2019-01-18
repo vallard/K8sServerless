@@ -13,4 +13,6 @@ We already have much of the prerequisites:
 * NoSQL: MongoDB
 * K8s: Cisco Container Platform. 
 
-Now let's get some code to test it out.  
+Now if you wish, you can go deploy the guestbook application [as described in the FONK repo](https://github.com/fonk-apps/fonk-examples/tree/master/guestbook)
+
+The Kubeless portion [is described here](https://github.com/fonk-apps/fonk-examples/tree/master/guestbook/faas/kubeless/python). Note: You already did much of the work with updating the python runtime image so you do not need to change that. 

@@ -20,7 +20,7 @@ provider:
     MONGODB_COLLECTION: "entries"
     MONGODB_SECRETS: "fonkdb-mongodb"
     #MINIO_HOST: "fonkfe:9000"
-    MINIO_HOST: "10.10.20.208:9000"  # this should be the public svc address of the minio service
+    MINIO_HOST: "10.10.20.201:9000"  # this should be the public svc address of the minio service
     MINIO_SECRETS: "fonkfe"
     MINIO_BUCKET: "uploads"
 
@@ -32,7 +32,7 @@ functions:
   list:
    handler: photos.list
    environment:
-    MINIO_HOST: "10.10.20.208:9000"  # this should be the public svc address of the minio service
+    MINIO_HOST: "10.10.20.201:9000"  # this should be the public svc address of the minio service
 
    events:
       - http:
@@ -41,7 +41,7 @@ functions:
   delete:
    handler: photos.delete
    environment:
-    MINIO_HOST: "10.10.20.208:9000"  # this should be the public svc address of the minio service
+    MINIO_HOST: "10.10.20.201:9000"  # this should be the public svc address of the minio service
    events:
       - http:
           path: /images/delete
@@ -49,7 +49,7 @@ functions:
   upload:
    handler: photos.upload
    environment:
-    MINIO_HOST: "10.10.20.208:9000"  # this should be the public svc address of the minio service
+    MINIO_HOST: "10.10.20.201:9000"  # this should be the public svc address of the minio service
    events:
       - http:
           path: /images/upload
