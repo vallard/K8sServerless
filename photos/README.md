@@ -218,6 +218,7 @@ Assuming your code has been modified you can rebuild and deploy it:
 npm run build 
 mc cp --recursive build/ minio/photobook/
 ```
+You can then open your browser with your updates.  You are an amazingly efficient developer!
 
 How could you add something like this to a CI/CD pipeline?  The front end is pretty straight forward.  How about the backend?  How do you do version control? What about A/B testing?
 
