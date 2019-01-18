@@ -11,7 +11,7 @@ service: photos
 provider:
   name: kubeless
   defaultDNSResolution: 'xip.io'
-  hostname: 10.10.20.207.xip.io # this should be the IP address of the LoadBalancer of the ingress controller
+  hostname: 10.10.20.200.xip.io # this should be the IP address of the LoadBalancer of the ingress controller
   runtime: python2.7
   environment:
     MONGODB_HOST: "fonkdb-mongodb"

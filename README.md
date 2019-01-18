@@ -24,16 +24,12 @@ Below are the contents of the two sections in our course.  You can refer back to
 * [6. Kubeless](kubeless/README.md)
 
 ## Part II: Building the Application 
-### Testing a basic Serverless Application
 
-* [7. FONK Guestbook](fonk/)
 
-### Building a more complex serverless Application
-
-* [8. Application Overview](photos/OVERVIEW.md)
-* [9. FaaS Backend](serverless/README.md)
-* [10. NodeJS Frontend](photos/README.md)
-* [11. Object Recognition](yolo/README.md)
+* [7. Application Overview](photos/OVERVIEW.md)
+* [8. Serverless](serverless/README.md)
+* [9. NodeJS Frontend](photos/README.md)
+* [10. Object Recognition](yolo/README.md)
 
 ## Credits and Shoutouts
 

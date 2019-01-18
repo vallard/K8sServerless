@@ -301,8 +301,6 @@ kubeless function update thumb -f resize.py
 mc event remove minio/uploads arn:minio:sqs:us-east-1:1:webhook
 ```
 
-
-
 ## Sources
 
 * [https://kubeless.io/docs/quick-start/](https://kubeless.io/docs/quick-start/)
@@ -314,5 +312,5 @@ __End of Part 1!__
 
 * [Go Back Home](../README.md)
 * [Previous Module: Minio](../minio/README.md)
-* [Next Module: We want the FONK!](../fonk/README.md)
+* [Next Module: Application Overview!](../photos/OVERVIEW.md)
 

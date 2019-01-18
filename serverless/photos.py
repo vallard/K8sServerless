@@ -152,9 +152,9 @@ def upload(event, context):
     print("MINIO_HOST IS: ", MINIO_HOST)
     url = url.replace("fonkfe:9000", MINIO_HOST)
     print(url)
+    # data we want to upload to the image. 
     photo = {
         "name" : f.filename,
-        "date" : datetime.datetime.utcnow(),
         "url" : url
     }
     # put object information into database.
