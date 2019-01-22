@@ -182,4 +182,4 @@ kubeless function update rek -f rek.py
 You are done!  Congratulations! You now know everything about serverless on prem.  You can now put it on your linkedIn profile as 'serverless expert'... right? 
 
 * [Go Back Home](../README.md)
-* [Previous Module: serverless](../serverless/kubeless.md)
+* [Previous Module: serverless](../serverless/README.md)

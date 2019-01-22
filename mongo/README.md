@@ -104,7 +104,9 @@ This will print out the entry that we created.  But we'll see that it added a fi
 	"quantity" : 40
 }
 ```
-An `_id` field of `ObjectId`.  
+An `_id` field of `ObjectId`.  What is this?  
+
+MongoDB ads a unique field for every document entered.  If you don't specify one (which you can) then Mongo creates its own.  It is of type [ObjectId](https://docs.mongodb.com/manual/reference/method/ObjectId/).  In this way it can reference every document uniquely.  
 
 ### 4.3.3 Updating A document
 

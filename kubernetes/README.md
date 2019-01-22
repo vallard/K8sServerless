@@ -48,6 +48,13 @@ This will save a file named `kubeconfig.yaml`.  To make use of this with `kubect
 
 ### 2.2.1 Windows Example
 
+```
+mkdir -p c:\Users\<yourname>\.kube
+```
+move the `kubeconfig.yaml` file into the `.kube` directory and rename it `config` (no extensions)
+
+![windows kubectl](../images/k8s03.png)
+
 ### 2.2.2 Mac Example
 
 ```
@@ -201,15 +208,17 @@ Let's illustrate with an example.
 
 ##### Challenge 2.6: Change the `ngx1` service back into type ClusterIP
 
-With the service back to cluster IP we can't access it from the outside.  However, we have an ingress controller:
+With the service back to `ClusterIP` we can't access it from the outside.  However, we have an ingress controller:
 
 ```
 get svc -n ccp nginx-ingress-controller
 ```
 
+Don't mistake the name here.  It happens to be that we are using `nginx` as an [ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-controllers).  But we are also using `nginx` as our application for serving up web pages.  It's quite flexible!  
+
 This ingress controller has an `EXTERNAL-IP`.  We can make a rule that when someone goes to that IP address (or dns) we can layer 7 route it to the `ngx1` application. 
 
-[Download the ingress controller yaml](https://raw.githubusercontent.com/vallard/K8sServerless/master/kubernetes/ngx1-ing.yaml) file and open it up to edit it.  
+[Download the ingress rule yaml](https://raw.githubusercontent.com/vallard/K8sServerless/master/kubernetes/ngx1-ing.yaml) file and open it up to edit it.  
 
 We are using [xip.io](https://xip.io) to redirect since we don't have an external domain name associated with our IP addresses.  
 
@@ -221,13 +230,13 @@ Change the IP address to match the IP address of your `EXTERNAL-IP` of the ingre
   ...
 ```
 
-Next apply the kubernetes configuration with:
+Next create the ingress rule with:
 
 ```
 kubectl create -f ngx1-ing.yaml
 ```
 
-Assuming you were able to change the `ngx` `svc` then you will be able to see that it is routing to your backend pods:
+Assuming you were able to change the `ngx` to `svc` then you will be able to see that it is routing to your backend pods:
 
 ```
 kubectl get ing
@@ -237,7 +246,28 @@ Now you should be able to open the browser again to:
 
 [http://ngx1.10.10.20.200.xip.io/](http://ngx1.10.10.20.200.xip.io/) and see the same happy nginx page.  __Note:__ you should make sure its your ingress controller service IP address that you point it to. 
 
-## 2.4 Conclusion	
+Why did we use xip?  Well, the ingress controller works by examining what the domain name was on the HTTP request.  It uses the domain name then to route to the appropriate Kubernetes service by following the ingress rule that you created. 
+
+## 2.4 Other CCP Kubernetes
+
+CCP comes built in with monitoring and [Prometheus](https://prometheus.io/).  The support is there with Cisco TAC so this offers exceptional value.  
+
+Let's log into the monitoring of our project by going back to the Kubernetes dashboard and looking at Grafana. 
+
+![monitoring](../images/k8s04.png)
+
+Confirm the security exceptions.  The username is admin. To get the password use the following command on a mac:
+
+```
+kubectl -n ccp get secret ccp-monitor-grafana -o=jsonpath='{.data.admin-password}' | base64 -D
+```
+
+If you don't have the base64 command or pipe run the command and then go to an online [base64 decoder site](https://www.base64decode.org/)
+
+The monitoring on sandbox is a little rough given that it is an emulated environment. However seeing it all laid out can be handy.  
+
+
+## 2.5 Conclusion	
 
 This concludes our brief tour of kubernetes.  We will be using services, pods, deployments, ingress controllers and some other things we didn't cover as well later on. We just need to add some more infrastructure components before we can construct our application!
 

@@ -33,7 +33,13 @@ replicaset.apps/kubeless-controller-manager-574cf75749   1         1         0  
 
 Each serverless function runs in a container.  We call this the `runtime` container.  You can see the runtime environments on the [kubeless github page](https://github.com/kubeless/runtimes).  As serverless is new and constantly evolving things change quick.  However this also means that certain features you may want for your apps are not included in the runtimes.  
 
-The features of `CORS` and file uploads are not included.  Fortunately, we can patch this by using our own runtime environment.  
+The features of [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) and file uploads are not included.  Fortunately, we can patch this by using our own runtime environment. 
+
+### 6.2.1 What is CORS? 
+
+CORS is _Cross-Origin Resource Sharing_. When the web application is from one origin (The minio IP address) and the API is at another origin (The ingress controller IP address) then we have to specifically allow connections from different locations using [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS).  We end up putting a header in the API response that tells the web browser that we will accept connections from it. 
+
+### 6.2.2 Update the ConfigMap    
 
 We have already prepared a new runtime environment for this lab.  To use it we have to modify the [ConfigMap](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/) that we just installed with kubeless. To see it run:
 
@@ -59,6 +65,7 @@ Very carefully replace the python runtime image with:
 "python:2.7", "phase": "installation"}, {"env": {"PYTHONPATH": "$(KUBELESS_INSTALL_VOLUME)/lib/python2.7/site-packages:$(KUBELESS_INSTALL_VOLUME)"},
     "image": "vallard/kubeless-pythonf:2.7",
 ```
+### 6.2.3 Restart the `kubeless` pods
 
 Now we will delete the controller pod so that it rereads the configmaps: 
 
@@ -244,7 +251,9 @@ kubectl create clusterrolebinding \
 
 ### 6.5.4 Get `resize.py`
 
-Download the `resize.py` function from [here](https://raw.githubusercontent.com/vallard/K8sServerless/master/kubeless/resize.py).  Examine the contents.  We see that it 
+Download the `resize.py` function from [here](https://raw.githubusercontent.com/vallard/K8sServerless/master/kubeless/resize.py).  Examine the contents.  A few of our functions will look similar.  We first grab the secrets from Kubernetes so that the function can log into minio.  
+
+Next we download the file, then use the python Pillow library to open the file and make the image smaller.  Once we do that we try to upload it back to minio in the `thumbs` directory with the same name but with `.thumb` appended to it.   
 
 ### 6.5.5 Get `requirements.txt`
 
@@ -281,7 +290,7 @@ This module shows how `kubeless` can create functions.  They are quick and power
 * No `Dockerfile`s required
 * No `yaml` files created.  
 
-But how would you test such a function in a serverless world? How do you iterate?  How do you do rolebacks? How do you integrate it into a CI/CD pipeline?  Many of these questions are still being looked at and have not been solved in a one size fits all manner. 
+But how would you test such a function in a serverless world? How do you iterate?  How do you do rollbacks? How do you integrate it into a CI/CD pipeline?  Many of these questions are still being looked at and have not been solved in a one size fits all manner. 
 
 ##### Challenge 6.1: Explain the trail of how minio calls the resize function.  How does `thumbs:8080` fit into this?
 
