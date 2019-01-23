@@ -1,6 +1,6 @@
 # 8. Serverless Backend
 
-We will add several backend API calls now.  We have a photobook so the basic application will allow us to add, view or delete photos.  Thats pretty much all we need.  We could continue to use the `kubeless` commands to deploy the different functions but the [serverless framework](https://serverless.com) gives us a better structured way to manage our kubeless functions. This way we can deploy our functions to execute our photobook. 
+We will add several backend API calls now.  We have a photobook so the basic application will allow us to add, view or delete photos.  Thats pretty much all we need.  We could continue to use the `kubeless` commands to deploy the different functions but the [serverless framework](https://serverless.com) gives us a better structured way to manage our kubeless functions. This way we can deploy our functions to execute our photobook.
 
 ## 8.1 Install node
 
@@ -42,7 +42,7 @@ You can use brew or grab from [here](https://git-scm.com/downloads)
 
 On the commandline go to a directory where you will remember (I use `~/Code` for all my code, but feel free to customize as you desire)
 
-From there run: 
+From there run:
 
 ```
 git clone git@github.com:vallard/K8sServerless.git
@@ -59,7 +59,7 @@ There are package dependencies that need to be installed for the serverless-kube
 
 You can examine the package dependencies in the `./K8sServerless/serverless/package.json` file.  
 
-To install the dependencies do the following: 
+To install the dependencies do the following:
 
 ```
 cd <repos-dir>/K8sServerless/serverless
@@ -86,7 +86,7 @@ Next, take this IP address and put it into the `serverless.yaml` file appending 
 You'll also notice several places where `MINIO_HOST` is defined.  This should be set to the minio service IP address.  (Remember: minio is named `fonkfe` in our helm deployment so getting the kubernetes service `EXTERNAL-IP` address for this is what you are looking for)
 
 ```
-  MINIO_HOST: "10.10.20.201:900"
+  MINIO_HOST: "10.10.20.201:9000"
 ```
 
 ### 8.4.3 Deploy the serverless functions
@@ -97,7 +97,7 @@ Deploy the functions:
 sls deploy
 ```
 
-output: 
+output:
 
 ```
 Serverless: Packaging service...
@@ -112,7 +112,7 @@ Serverless: Function delete successfully deployed
 
 ## 8.5 Test/Verify Serverless Functions
 
-To see how our service is doing we can run: 
+To see how our service is doing we can run:
 
 ```
 sls logs -f list
@@ -120,10 +120,10 @@ sls logs -f list
 
 Call the function
 ```
-serverless invoke -f list -l
+sls invoke -f list -l
 ```
 
-Output: 
+Output:
 
 ```
 {"photos": []}
@@ -144,13 +144,13 @@ ngx1      ngx1.10.10.20.200.xip.io   10.10.20.113,10.10.20.114   80        20h
 photos    10.10.20.200.xip.io        10.10.20.113,10.10.20.114   80        8m
 ```
 
-We should be able to hit it with: 
+We should be able to hit it with:
 
 ```
-curl http://<your ingress controller>.xip.io/images/list
+curl http://<your ingress controller host>.xip.io/images/list
 ```
 
-If you get: 
+If you get:
 
 ```
 default backend - 404
@@ -160,11 +160,11 @@ Then something is not right.  Check your work, ask for help, and fix it before m
 
 ## 8.6 Challenge: Modify code
 
-Take a look at the `photos.py` file.  You'll notice there is a function called `upload(event, context)`.  Modify the record that gets inserted into the database by adding a timestamp.  Call the entry `date`.  You may find the `datetime.datetime.utcnow()` function helpful. 
+Take a look at the `photos.py` file.  You'll notice there is a function called `upload(event, context)`.  Modify the record that gets inserted into the database by adding a timestamp.  Call the entry `date`.  You may find the `datetime.datetime.utcnow()` function helpful.
 
-As you can see testing in a serverless environment is not always trivial.  This presents one of the drawbacks of this method of developing. 
+As you can see testing in a serverless environment is not always trivial.  This presents one of the drawbacks of this method of developing.
 
-There are a few troubleshooting commands that can help you: 
+There are a few troubleshooting commands that can help you:
 
 ```
 kubectl get pods
@@ -172,12 +172,12 @@ kubectl logs -f <podname>
 kubectl describe ing photos
 ```
 
-Python errors will prevent the container from starting.  The logs would show you where that is. 
+Python errors will prevent the container from starting.  The logs would show you where that is.
 
 
 ## 8.7 Serverless Conclusion
 
-At this point three serverless functions have been installed to allow us to upload photos, list them, and delete them. 
+At this point three serverless functions have been installed to allow us to upload photos, list them, and delete them.
 
 ## Where to next?
 
