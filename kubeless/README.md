@@ -16,7 +16,7 @@ You should see that all of the resources come up
 kubectl get all -n kubeless
 ```
 
-This shows the following: 
+This shows the following:
 
 ```
 NAME                                               READY     STATUS              RESTARTS   AGE
@@ -33,11 +33,11 @@ replicaset.apps/kubeless-controller-manager-574cf75749   1         1         0  
 
 Each serverless function runs in a container.  We call this the `runtime` container.  You can see the runtime environments on the [kubeless github page](https://github.com/kubeless/runtimes).  As serverless is new and constantly evolving things change quick.  However this also means that certain features you may want for your apps are not included in the runtimes.  
 
-The features of [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) and file uploads are not included.  Fortunately, we can patch this by using our own runtime environment. 
+The features of [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) and file uploads are not included.  Fortunately, we can patch this by using our own runtime environment.
 
-### 6.2.1 What is CORS? 
+### 6.2.1 What is CORS?
 
-CORS is _Cross-Origin Resource Sharing_. When the web application is from one origin (The minio IP address) and the API is at another origin (The ingress controller IP address) then we have to specifically allow connections from different locations using [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS).  We end up putting a header in the API response that tells the web browser that we will accept connections from it. 
+CORS is _Cross-Origin Resource Sharing_. When the web application is from one origin (The minio IP address) and the API is at another origin (The ingress controller IP address) then we have to specifically allow connections from different locations using [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS).  We end up putting a header in the API response that tells the web browser that we will accept connections from it.
 
 ### 6.2.2 Update the ConfigMap    
 
@@ -53,13 +53,13 @@ To modify we run:
 kubectl edit cm -n kubeless kubeless-config
 ```
 
-This will put us in a vi session.  We will look for the following lines: 
+This will put us in a vi session.  We will look for the following lines:
 
 ```
 "python:2.7", "phase": "installation"}, {"env": {"PYTHONPATH": "$(KUBELESS_INSTALL_VOLUME)/lib/python2.7/site-packages:$(KUBELESS_INSTALL_VOLUME)"},
     "image": "kubeless/python@sha256:34332f4530508a810f491838a924c36ceac0ec7cab487520e2db2b037800ecda",
 ```
-Very carefully replace the python runtime image with: 
+Very carefully replace the python runtime image with:
 
 ```
 "python:2.7", "phase": "installation"}, {"env": {"PYTHONPATH": "$(KUBELESS_INSTALL_VOLUME)/lib/python2.7/site-packages:$(KUBELESS_INSTALL_VOLUME)"},
@@ -67,13 +67,13 @@ Very carefully replace the python runtime image with:
 ```
 ### 6.2.3 Restart the `kubeless` pods
 
-Now we will delete the controller pod so that it rereads the configmaps: 
+Now we will delete the controller pod so that it rereads the configmaps:
 
 ```
 kubectl delete pods -n kubeless -l kubeless=controller
 ```
 
-This should make cors enabled and file uploads possible on our python runtime containers. 
+This should make cors enabled and file uploads possible on our python runtime containers.
 
 ## 6.3 Install Kubeless Client
 
@@ -85,7 +85,8 @@ Download the `kubeless` from the [releases page](https://github.com/kubeless/kub
 ### 6.3.2 Mac & Linux
 
 ```
-export RELEASE=v1.0.1 
+export RELEASE=v1.0.1
+export OS=$(uname -s| tr '[:upper:]' '[:lower:]')
 curl -OL https://github.com/kubeless/kubeless/releases/download/$RELEASE/kubeless_$OS-amd64.zip &&   unzip kubeless_$OS-amd64.zip &&   sudo mv bundles/kubeless_$OS-amd64/kubeless /usr/local/bin/
 ```
 
@@ -108,7 +109,7 @@ def hello(event, context):
 
 ### 6.4.2 Deploy `function01.py1` with kubeless
 
-To deploy we run: 
+To deploy we run:
 
 ```
 kubeless function deploy hello --runtime python2.7 \
@@ -118,7 +119,7 @@ kubeless function deploy hello --runtime python2.7 \
 
 This will deploy a function named `hello` that will run in a python "runtime".  It will use the `function01.py` file and use the function `hello` from this file.  As you can see the `test` isn't used in python, but this should normally match the file name or module.
 
-You'll then see with `kubectl` that new pod will come up: 
+You'll then see with `kubectl` that new pod will come up:
 
 ```
 kubectl get pods,svc -l function=hello
@@ -126,7 +127,7 @@ kubectl get pods,svc -l function=hello
 
 ### 6.4.3 Debugging kubeless
 
-If you see `ErrImagePull` in the status it means the runtime was improperly typed and needs to be changed.  Repeat the steps above and restart the controller and you should see it deploy. 
+If you see `ErrImagePull` in the status it means the runtime was improperly typed and needs to be changed.  Repeat the steps above and restart the controller and you should see it deploy.
 
 One way we can tell what is wrong is by running:
 
@@ -134,36 +135,36 @@ One way we can tell what is wrong is by running:
 kubectl logs -f <pod name>
 ```
 
-Where `<pod name>` is the name of the pod that is failing. 
+Where `<pod name>` is the name of the pod that is failing.
 
 kubeless deploys a [deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) and a [service](https://kubernetes.io/docs/concepts/services-networking/service/)
 
-This service by default is of type ClusterIP so it can be called internally but not reached externally unless we create an ingress rule or give the service a LoadBalancer. 
+This service by default is of type ClusterIP so it can be called internally but not reached externally unless we create an ingress rule or give the service a LoadBalancer.
 
 ### 6.4.4 Test the `hello` function
 
-We can then call the function by either using a [proxy](https://kubernetes.io/docs/tasks/access-kubernetes-api/http-proxy-access-api/) or spin up our own container to run.  Let's use our own container to do talk to it. 
+We can then call the function by either using a [proxy](https://kubernetes.io/docs/tasks/access-kubernetes-api/http-proxy-access-api/) or spin up our own container to run.  Let's use our own container to do talk to it.
 
 ```
 kubectl run alp --image=alpine -- sleep 60000
 ```
-This will deploy a `pod alp-xxxxxxxxxx-xxxxx`.  We can log into this pod with: 
+This will deploy a `pod alp-xxxxxxxxxx-xxxxx`.  We can log into this pod with:
 
 ```
 export AL=$(kubectl get pods | grep alp | awk '{print $1}')
 kubectl exec -it $AL /bin/sh
 ```
 
-This will put you in the pod.  We can now call the service within this pod since we have access to `ClusterIP`s in the pod space: 
+This will put you in the pod.  We can now call the service within this pod since we have access to `ClusterIP`s in the pod space:
 
 ```
 apk add --no-cache curl  # install curl
 curl -L --data '{"Another": "Echo"}' \
   --header "Content-Type:application/json" \
-  hello:8080 
+  hello:8080
 ```
 
-This will return exactly what you gave it: 
+This will return exactly what you gave it:
 
 ```
 {"Another": "Echo"}
@@ -171,18 +172,18 @@ This will return exactly what you gave it:
 
 Our first function as a service works!
 
-Notice that the way we call other functions or services in kubernetes follows the form: 
+Notice that the way we call other functions or services in kubernetes follows the form:
 
 ```
 <svc>.<namespace>.svc.<cluster domain>
 ```
 
-In this case it was 
+In this case it was
 
 ```
 hello.default.svc.cluster.local
 ```
-By default we are in the same namespace and so we could leave everything else off and just use `hello`. 
+By default we are in the same namespace and so we could leave everything else off and just use `hello`.
 
 ### 6.4.5 Delete Sample Function
 
@@ -209,14 +210,14 @@ mc mb minio/thumbs
 ```
 
 ### 6.5.2 Activate Webhooks
- 
+
 You can add `webhooks` minio.  We already added these with the config file you used to create the helm chart in the beginning. (you may have seen this in a previous challenge)  Run the command:  
 
 ```
 mc admin config get minio
 ```
 
-You will see an entry: 
+You will see an entry:
 
 ```json
 "webhook": {
@@ -227,10 +228,10 @@ You will see an entry:
 		}
 ```
 
-This is the first webhook `1` that is available to us.  Let's use it: 
+This is the first webhook `1` that is available to us.  Let's use it:
 
 ```
-mc event add minio/uploads arn:minio:sqs:us-east-1:1:webhook --event put 
+mc event add minio/uploads arn:minio:sqs:us-east-1:1:webhook --event put
 ```
 
 (You could also filter by suffixes of items but this is difficult if they use JPEG, jpg, Jpeg, etc for extension names.  Without the filter all items trigger a notification. ).  We can now see the webhook is ready:
@@ -259,7 +260,7 @@ Next we download the file, then use the python Pillow library to open the file a
 
 Download the `requirements.txt` file from [here](https://raw.githubusercontent.com/vallard/K8sServerless/master/kubeless/requirements.txt)
 
-The runtime will not have all the python requirements we need.  For this purpose we put them in a file that we can tell kubeless to download them for us later. 
+The runtime will not have all the python requirements we need.  For this purpose we put them in a file that we can tell kubeless to download them for us later.
 
 ### 6.5.5 Create `resize` function
 
@@ -290,11 +291,11 @@ This module shows how `kubeless` can create functions.  They are quick and power
 * No `Dockerfile`s required
 * No `yaml` files created.  
 
-But how would you test such a function in a serverless world? How do you iterate?  How do you do rollbacks? How do you integrate it into a CI/CD pipeline?  Many of these questions are still being looked at and have not been solved in a one size fits all manner. 
+But how would you test such a function in a serverless world? How do you iterate?  How do you do rollbacks? How do you integrate it into a CI/CD pipeline?  Many of these questions are still being looked at and have not been solved in a one size fits all manner.
 
 ##### Challenge 6.1: Explain the trail of how minio calls the resize function.  How does `thumbs:8080` fit into this?
 
-##### Challenge 6.2: Change the function to accept .gif, .png, and .jpeg extensions. 
+##### Challenge 6.2: Change the function to accept .gif, .png, and .jpeg extensions.
 
 ###### Challenge 6.2 Hint:
 After changing code you need to update the function and can use:
@@ -322,4 +323,3 @@ __End of Part 1!__
 * [Go Back Home](../README.md)
 * [Previous Module: Minio](../minio/README.md)
 * [Next Module: Application Overview!](../photos/OVERVIEW.md)
-
