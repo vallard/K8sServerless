@@ -51,7 +51,7 @@ export MONGODB_ROOT_PASSWORD=$(kubectl get secret --namespace default fonkdb-mon
 Now we can connect with: 
 
 ```
-kubectl run --namespace default fonkdb-mongodb-client --rm --tty -i --restart='Never' --image bitnami/mongodb --command -- mongo admin --host fonkdb-mongodb --authenticationDatabase admin -u root -p $MONGODB_ROOT_PASSWORD
+kubectl run --namespace default fonkdb-mongodb-client --rm --tty -i --image bitnami/mongodb --command -- mongo admin --host fonkdb-mongodb --authenticationDatabase admin -u root -p $MONGODB_ROOT_PASSWORD
 ```
 This will put us at the mongo db console to run some commands. 
 
