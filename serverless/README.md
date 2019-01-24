@@ -4,18 +4,18 @@ We will add several backend API calls now.  We have a photobook so the basic app
 
 ## 8.1 Install node
 
-Because the serverless framework is written in javascript, you will need to install [node]() and [npm]().  
+Because the serverless framework is written in javascript, you will need to install [node and npm](https://www.npmjs.com/get-npm).  
 
 ### 8.1.1 Windows
 
-1. [Get installer](https://nodejs.org/en/download/)
-2. Install packages
+1. [Get installer](https://nodejs.org/en/download/).
+2. Install packages.
 3. Run `node -v` on command line to verify.
 
 ### 8.1.2 MacOS
 
-1. [Get installer](https://nodejs.org/en/download/)
-2. Install packages
+1. [Get installer](https://nodejs.org/en/download/).
+2. Install packages.
 3. Run `node -v` on command line to verify.
 
 ## 8.2 Install serverless
@@ -28,21 +28,21 @@ If all goes well you will have the serverless platform installed.
 
 ## 8.3 Get code
 
-We now need to get the code from github in order to build our system.  
+We now need to get the code from GitHub in order to build our system.  
 
 ### 8.3.1 Git for Windows
 
-[download code](https://git-scm.com/download/win)
+[Download code](https://git-scm.com/download/win).
 
 ### 8.3.2 Git for MacOS
 
-You can use brew or grab from [here](https://git-scm.com/downloads)
+You can use brew or grab from [here](https://git-scm.com/downloads).
 
 ### 8.3.3 Download this repository
 
-On the commandline go to a directory where you will remember (I use `~/Code` for all my code, but feel free to customize as you desire)
+On the command line go to a directory where you will remember (I use `~/Code` for all my code, but feel free to customize as you desire),
 
-From there run:
+From there, run:
 
 ```
 git clone git@github.com:vallard/K8sServerless.git
@@ -83,7 +83,7 @@ Next, take this IP address and put it into the `serverless.yaml` file appending 
 ...
 ```
 
-You'll also notice several places where `MINIO_HOST` is defined.  This should be set to the minio service IP address.  (Remember: minio is named `fonkfe` in our helm deployment so getting the kubernetes service `EXTERNAL-IP` address for this is what you are looking for)
+You'll also notice several places where `MINIO_HOST` is defined.  This should be set to the Minio service IP address.  (Remember: Minio is named `fonkfe` in our helm deployment, so getting the Kubernetes service `EXTERNAL-IP` address for this is what you are looking for)
 
 ```
   MINIO_HOST: "10.10.20.201:9000"
@@ -118,7 +118,8 @@ To see how our service is doing we can run:
 sls logs -f list
 ```
 
-Call the function
+Call the function:
+
 ```
 sls invoke -f list -l
 ```
@@ -129,14 +130,13 @@ Output:
 {"photos": []}
 ```
 
-
 The function is now accessible from our [ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress/).  You can see the ingress rules created by running:
 
 ```
 kubectl get ing
 ```
 
-You'll see a newly created `photos` ingress rule along side your old rule:
+You'll see a newly created `photos` ingress rule, alongside your old rule:
 
 ```
 NAME      HOSTS                      ADDRESS                     PORTS     AGE
@@ -156,7 +156,7 @@ If you get:
 default backend - 404
 ```
 
-Then something is not right.  Check your work, ask for help, and fix it before moving on.  
+... then something is not right.  Check your work, ask for help, and fix it before moving on.  
 
 ## 8.6 Challenge: Modify code
 
