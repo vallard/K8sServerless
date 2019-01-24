@@ -2,7 +2,7 @@
 
 [Helm](https://helm.sh/) is a package manager for Kubernetes applications.  Instead of using multiple yaml files we have an easy way to install applications.  The benefit comes when applications are comprised of multiple pods and/or services.  Helm calls these bundles [charts](https://github.com/helm/charts)
 
-For serverless applications we require an object store and a mongodb database.  We could install these with yaml files and it's not so hard to do that, but helm helps us with rollback and versions, so we will spend a few minutes installing helm.
+For serverless applications we require an object store and a MongoDB database.  We could install these with yaml files and it's not so hard to do that, but helm helps us with rollback and versions, so we will spend a few minutes installing helm.
 
 ## 3.1 Download Helm client
 
@@ -12,11 +12,11 @@ Helm is composed of a client and a server (tiller). Because our CCP sandbox has 
 
 (scroll down past the `What's Changed` section to see the binary downloads)
 
-### 3.1.1 Windows client
+### 3.1.1 Windows 
 
 Download the windows binary and put it in your path.
 
-### 3.1.2 MacOS client
+### 3.1.2 MacOS 
 
 Copy the binary to `/usr/local/bin` and helm should run right away.  Test with:
 
