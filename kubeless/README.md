@@ -3,14 +3,14 @@
 
 ## 6.1 Install Kubeless
 
-The Kubeless [installation procedure](https://kubeless.io/docs/quick-start/) is well documented.  We will repost steps here for convinence and predictability and use the v1.0.1 release
+Kubeless [installation procedure](https://kubeless.io/docs/quick-start/) is well documented.  We will repost steps here for convenience and predictability, and use the v1.0.1 release.
 
 ```
 kubectl create ns kubeless
 kubectl create -f https://github.com/kubeless/kubeless/releases/download/v1.0.1/kubeless-v1.0.1.yaml
 ```
 
-You should see that all of the resources come up
+You should see that all of the resources come up:
 
 ```
 kubectl get all -n kubeless
@@ -31,13 +31,13 @@ replicaset.apps/kubeless-controller-manager-574cf75749   1         1         0  
 
 ## 6.2 Patch the Python Runtime
 
-Each serverless function runs in a container.  We call this the `runtime` container.  You can see the runtime environments on the [kubeless github page](https://github.com/kubeless/runtimes).  As serverless is new and constantly evolving things change quick.  However this also means that certain features you may want for your apps are not included in the runtimes.  
+Each serverless function runs in a container.  We call this the `runtime` container.  You can see the runtime environments on the [kubeless github page](https://github.com/kubeless/runtimes).  As serverless is new, and constantly evolving, things change quick.  However this also means that certain features you may want for your apps are not included in the runtimes.  
 
 The features of [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) and file uploads are not included.  Fortunately, we can patch this by using our own runtime environment.
 
 ### 6.2.1 What is CORS?
 
-CORS is _Cross-Origin Resource Sharing_. When the web application is from one origin (The minio IP address) and the API is at another origin (The ingress controller IP address) then we have to specifically allow connections from different locations using [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS).  We end up putting a header in the API response that tells the web browser that we will accept connections from it.
+CORS is _Cross-Origin Resource Sharing_. When the web application is from one origin (the minio IP address), and the API is at another origin (the ingress controller IP address), then we have to specifically allow connections from different locations using [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS).  We end up putting a header in the API response that tells the web browser that we will accept connections from it.
 
 ### 6.2.2 Update the ConfigMap    
 
@@ -47,40 +47,41 @@ We have already prepared a new runtime environment for this lab.  To use it we h
 kubectl get cm -n kubeless
 ```  
 
-To modify we run:
+To modify it we run:
 
 ```
 kubectl edit cm -n kubeless kubeless-config
 ```
 
-This will put us in a vi session.  We will look for the following lines:
+This will put us in a `vi` session.  We will look for the following lines:
 
 ```
 "python:2.7", "phase": "installation"}, {"env": {"PYTHONPATH": "$(KUBELESS_INSTALL_VOLUME)/lib/python2.7/site-packages:$(KUBELESS_INSTALL_VOLUME)"},
     "image": "kubeless/python@sha256:34332f4530508a810f491838a924c36ceac0ec7cab487520e2db2b037800ecda",
 ```
+
 Very carefully replace the python runtime image with:
 
 ```
 "python:2.7", "phase": "installation"}, {"env": {"PYTHONPATH": "$(KUBELESS_INSTALL_VOLUME)/lib/python2.7/site-packages:$(KUBELESS_INSTALL_VOLUME)"},
     "image": "vallard/kubeless-pythonf:2.7",
 ```
+
 ### 6.2.3 Restart the `kubeless` pods
 
-Now we will delete the controller pod so that it rereads the configmaps:
+Now we will delete the controller pod, so that it re-reads the ConfigMaps:
 
 ```
 kubectl delete pods -n kubeless -l kubeless=controller
 ```
 
-This should make cors enabled and file uploads possible on our python runtime containers.
+This should enable CORS and make file uploads possible on our python runtime containers.
 
 ## 6.3 Install Kubeless Client
 
 ### 6.3.1 Windows
 
-Download the `kubeless` from the [releases page](https://github.com/kubeless/kubeless/releases/tag/v1.0.1)
-
+Download the `kubeless` client from the [releases page](https://github.com/kubeless/kubeless/releases/tag/v1.0.1)
 
 ### 6.3.2 Mac & Linux
 
@@ -90,10 +91,9 @@ export OS=$(uname -s| tr '[:upper:]' '[:lower:]')
 curl -OL https://github.com/kubeless/kubeless/releases/download/$RELEASE/kubeless_$OS-amd64.zip &&   unzip kubeless_$OS-amd64.zip &&   sudo mv bundles/kubeless_$OS-amd64/kubeless /usr/local/bin/
 ```
 
-
 ## 6.4 Deploy a test function
 
-Following the quickstart guide we can create a simple hello function.  
+Following the quickstart guide we can create a simple *hello* function.  
 
 ### 6.4.1 Create the `function01.py` file
 
@@ -107,9 +107,9 @@ def hello(event, context):
 ```
 (alternatively, download it from [here](https://raw.githubusercontent.com/vallard/K8sServerless/master/kubeless/function01.py))
 
-### 6.4.2 Deploy `function01.py1` with kubeless
+### 6.4.2 Deploy `function01.py1` with Kubeless
 
-To deploy we run:
+To deploy it, we run:
 
 ```
 kubeless function deploy hello --runtime python2.7 \
@@ -117,29 +117,29 @@ kubeless function deploy hello --runtime python2.7 \
                      --handler test.hello
 ```
 
-This will deploy a function named `hello` that will run in a python "runtime".  It will use the `function01.py` file and use the function `hello` from this file.  As you can see the `test` isn't used in python, but this should normally match the file name or module.
+This will deploy a function named `hello` that will run in a python *runtime*.  It will use the `function01.py` file, and the `hello` function from this file.  As you can see the `test` isn't used in python, but this should normally match the file name or module.
 
-You'll then see with `kubectl` that new pod will come up:
+You'll then see with `kubectl` that new pod coming up:
 
 ```
 kubectl get pods,svc -l function=hello
 ```
 
-### 6.4.3 Debugging kubeless
+### 6.4.3 Debugging Kubeless
 
-If you see `ErrImagePull` in the status it means the runtime was improperly typed and needs to be changed.  Repeat the steps above and restart the controller and you should see it deploy.
+If you see `ErrImagePull` in the status it means the runtime was improperly typed and needs to be changed.  Repeat the steps above, restart the controller and you should see it correctly deployed.
 
 One way we can tell what is wrong is by running:
 
 ```
-kubectl logs -f <pod name>
+kubectl logs -f <pod_name>
 ```
 
-Where `<pod name>` is the name of the pod that is failing.
+Where `<pod_name>` is the name of the pod that is failing.
 
-kubeless deploys a [deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) and a [service](https://kubernetes.io/docs/concepts/services-networking/service/)
+Kubeless deploys a [deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) and a [service](https://kubernetes.io/docs/concepts/services-networking/service/)
 
-This service by default is of type ClusterIP so it can be called internally but not reached externally unless we create an ingress rule or give the service a LoadBalancer.
+This service, by default, is of type `ClusterIP`, so it can be called internally but not reached externally, unless we create an ingress rule or configurer the service as `LoadBalancer`.
 
 ### 6.4.4 Test the `hello` function
 
@@ -148,6 +148,7 @@ We can then call the function by either using a [proxy](https://kubernetes.io/do
 ```
 kubectl run alp --image=alpine -- sleep 60000
 ```
+
 This will deploy a `pod alp-xxxxxxxxxx-xxxxx`.  We can log into this pod with:
 
 ```
@@ -155,7 +156,8 @@ export AL=$(kubectl get pods | grep alp | awk '{print $1}')
 kubectl exec -it $AL /bin/sh
 ```
 
-This will put you in the pod.  We can now call the service within this pod since we have access to `ClusterIP`s in the pod space:
+This will put you *in* the pod.  We can now call the service within this pod, since we have access to `ClusterIP`s in the pod space:
+
 
 ```
 apk add --no-cache curl  # install curl
@@ -170,7 +172,7 @@ This will return exactly what you gave it:
 {"Another": "Echo"}
 ```
 
-Our first function as a service works!
+**Our first function as a service works!**
 
 Notice that the way we call other functions or services in kubernetes follows the form:
 
@@ -185,20 +187,22 @@ hello.default.svc.cluster.local
 ```
 By default we are in the same namespace and so we could leave everything else off and just use `hello`.
 
+
 ### 6.4.5 Delete Sample Function
 
-Exit out of the container and delete the hello function
+Exit out of the container and delete the `hello` function
 
 ```
 exit
 kubeless function delete hello
 ```
-Kubeless deletes the deployment and the service so its a bit cleaner than using kubectl to remove everything.
+
+Kubeless deletes the deployment and the service, so it's a bit cleaner than using `kubectl` to remove everything.
 
 
 ## 6.5 Photo Image Resize Function
 
-Let's make a function that builds upon our minio configuration and can create a thumbnail image of our image whenever we upload it to minio.  This is an image that can then be displayed by mobile clients should we ever create a mobile app for our service.  The `event` in this case is a file upload.  This will trigger a call to a photo resize function that we will create.  
+Let's make a function that builds upon our Minio configuration, and creates a thumbnail image of our image whenever we upload it to Minio.  This is an image that can then be displayed by mobile clients, should we ever create a mobile app for our service.  The `event` in this case is a file upload.  This will trigger a call to a photo *resize* function that we will create.  
 
 ### 6.5.1 Make Buckets
 
@@ -211,7 +215,7 @@ mc mb minio/thumbs
 
 ### 6.5.2 Activate Webhooks
 
-You can add `webhooks` minio.  We already added these with the config file you used to create the helm chart in the beginning. (you may have seen this in a previous challenge)  Run the command:  
+You can add `webhooks` to Minio.  We already added these with the config file you used to create the helm chart in the beginning (you may have seen this in a previous challenge).  Run the command:  
 
 ```
 mc admin config get minio
@@ -234,15 +238,17 @@ This is the first webhook `1` that is available to us.  Let's use it:
 mc event add minio/uploads arn:minio:sqs:us-east-1:1:webhook --event put
 ```
 
-(You could also filter by suffixes of items but this is difficult if they use JPEG, jpg, Jpeg, etc for extension names.  Without the filter all items trigger a notification. ).  We can now see the webhook is ready:
+You could also filter by suffixes of items, but this is difficult if they use JPEG, jpg, Jpeg, etc for extension names.  Without the filter all items trigger a notification.
+
+We can now see the webhook is ready:
 
 ```
 mc admin info minio
 ```
 
-### 6.5.3 Bypass security (Don't do this at home!)
+### 6.5.3 Bypass security (don't do this at home!)
 
-Make rules so we can access the secrets with our python script (otherwise it crashes).  This is insecure!  However, we will use it just to make it work for now:
+Make rules, so we can access the secrets with our python script (otherwise it crashes).  **This is insecure!**  However, we will use it just to make it work for now:
 
 ```
 kubectl create clusterrolebinding \
@@ -252,15 +258,15 @@ kubectl create clusterrolebinding \
 
 ### 6.5.4 Get `resize.py`
 
-Download the `resize.py` function from [here](https://raw.githubusercontent.com/vallard/K8sServerless/master/kubeless/resize.py).  Examine the contents.  A few of our functions will look similar.  We first grab the secrets from Kubernetes so that the function can log into minio.  
+Download the `resize.py` function from [here](https://raw.githubusercontent.com/vallard/K8sServerless/master/kubeless/resize.py).  Examine the contents.  A few of our functions will look similar.  We first grab the secrets from Kubernetes, so that the function can log into Minio.  
 
-Next we download the file, then use the python Pillow library to open the file and make the image smaller.  Once we do that we try to upload it back to minio in the `thumbs` directory with the same name but with `.thumb` appended to it.   
+Next, we download the file, and then use the python [Pillow library](https://python-pillow.org/) to open the file and make the image smaller.  Once we do that, we try to upload it back to Minio in the `thumbs` directory, with the same name but with `.thumb` appended to it.   
 
 ### 6.5.5 Get `requirements.txt`
 
 Download the `requirements.txt` file from [here](https://raw.githubusercontent.com/vallard/K8sServerless/master/kubeless/requirements.txt)
 
-The runtime will not have all the python requirements we need.  For this purpose we put them in a file that we can tell kubeless to download them for us later.
+The runtime will not have all the python requirements we need.  For this purpose we put them in a file that we can tell Kubeless to download them for us later.
 
 ### 6.5.5 Create `resize` function
 
@@ -291,19 +297,19 @@ This module shows how `kubeless` can create functions.  They are quick and power
 * No `Dockerfile`s required
 * No `yaml` files created.  
 
-But how would you test such a function in a serverless world? How do you iterate?  How do you do rollbacks? How do you integrate it into a CI/CD pipeline?  Many of these questions are still being looked at and have not been solved in a one size fits all manner.
+But how would you test such a function in a serverless world?  How do you iterate?  How do you do rollbacks?  How do you integrate it into a CI/CD pipeline?  Many of these questions are still being looked at and have not been solved in a one size fits all manner.
 
-##### Challenge 6.1: Explain the trail of how minio calls the resize function.  How does `thumbs:8080` fit into this?
+##### Challenge 6.1: Explain the trail of how Minio calls the resize function.  How does `thumbs:8080` fit into this?
 
 ##### Challenge 6.2: Change the function to accept .gif, .png, and .jpeg extensions.
 
 ###### Challenge 6.2 Hint:
-After changing code you need to update the function and can use:
+
+After changing code you need to update the function, and you can use:
 
 ```
 kubeless function update thumb -f resize.py
 ```
-
 
 ##### (optional, but don't do it) To remove the notification you would run:
 
