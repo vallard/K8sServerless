@@ -28,7 +28,7 @@ Below are the contents of the two sections in our course.  You can refer back to
 
 * [7. Application Overview](photos/OVERVIEW.md)
 * [8. Serverless](serverless/README.md)
-* [9. NodeJS Frontend](photos/README.md)
+* [9. NodeJS Front-end](photos/README.md)
 * [10. Object Recognition](yolo/README.md)
 
 ## Credits and Shoutouts
