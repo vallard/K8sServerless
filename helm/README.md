@@ -1,22 +1,22 @@
 # 3. Helm
 
-Helm is a package manager for kubernetes applications.  Instead of using yaml files we have an easy way to install applications.  The benefit comes when applications are comprised of multiple pods and/or services.  Helm calls these bundles [charts](https://github.com/helm/charts)
+[Helm](https://helm.sh/) is a package manager for Kubernetes applications.  Instead of using multiple yaml files we have an easy way to install applications.  The benefit comes when applications are comprised of multiple pods and/or services.  Helm calls these bundles [charts](https://github.com/helm/charts)
 
 For serverless applications we require an object store and a mongodb database.  We could install these with yaml files and it's not so hard to do that, but helm helps us with rollback and versions, so we will spend a few minutes installing helm.
 
-## 3.1 Download Helm
+## 3.1 Download Helm client
 
-Because our lab is a specific version we need to install a specific version of Helm.  In this case we need `2.10.0`.  You can download a binary for whichever operating system you have by downloading from this site:
+Helm is composed of a client and a server (tiller). Because our CCP sandbox has a specific server version we need to install a specific version of the Helm client in your workstation.  In this case we need `2.10.0`.  You can download a binary for whichever operating system you have in your workstation, by downloading from this site:
 
 [helm 2.10.0](https://github.com/helm/helm/releases/tag/v2.10.0)
 
 (scroll down past the `What's Changed` section to see the binary downloads)
 
-### 3.1.1 Windows
+### 3.1.1 Windows client
 
-Download the windows binary and put it in your path.  
+Download the windows binary and put it in your path.
 
-### 3.1.2 MacOS
+### 3.1.2 MacOS client
 
 Copy the binary to `/usr/local/bin` and helm should run right away.  Test with:
 
@@ -26,7 +26,7 @@ tar zxvf helm-v2.10.0-darwin-amd64.tar.gz
 mv darwin-amd64/helm /usr/local/bin
 ```
 
-### 3.1.3 Validate Helm
+### 3.1.3 Validate Helm installation and connectivity
 
 ```
 helm list
