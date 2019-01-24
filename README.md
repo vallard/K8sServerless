@@ -2,9 +2,9 @@
 
 [Serverless Architectures](https://www.martinfowler.com/articles/serverless.html) are becoming quite popular with developers.  They allow you to write less code and do rapid prototypes faster.  
 
-You usually hear about serverless in the public clouds such as AWS, Google, and Microsoft.  But thanks to Kubernetes we can also run serverless on prem using the [serverless framework](https://serverless.com) with several different kubernetes serverless integrations.  
+You usually hear about serverless in the public clouds such as AWS, Google, and Microsoft.  But thanks to Kubernetes we can also run serverless on prem using the [serverless framework](https://serverless.com) with several different Kubernetes serverless integrations.  
 
-In this tectorial we will create a photobook application from the ground up that uses Functions-as-a-Service (FaaS) runtimes on top of Kubernetes.  
+In this tectorial we will create a photobook application from the ground up that uses Function-as-a-Service (FaaS) runtimes on top of Kubernetes.  
 
 ![img](images/arch02.png)
 
@@ -16,7 +16,7 @@ Below are the contents of the two sections in our course.  You can refer back to
 
 ## Part I: Building the Platform
 
-* [1. DEVNET Sandbox](sb/README.md)
+* [1. DevNet Sandbox](sb/README.md)
 * [2. CCP Kubernetes](kubernetes/README.md)
 * [3. Helm](helm/README.md)
 * [4. MongoDB](mongo/README.md)
@@ -24,7 +24,6 @@ Below are the contents of the two sections in our course.  You can refer back to
 * [6. Kubeless](kubeless/README.md)
 
 ## Part II: Building the Application
-
 
 * [7. Application Overview](photos/OVERVIEW.md)
 * [8. Serverless](serverless/README.md)
