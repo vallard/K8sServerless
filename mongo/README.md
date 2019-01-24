@@ -38,7 +38,7 @@ You'll notice that the database service (`svc`) is not given an `EXTERNAL-IP`.  
 
 ## 4.3 Testing MongoDB
 
-In this section we will explore some of the ways MongoDB works and perform some operations.  But if we can't connect to it with our laptops, how can we connect and perform operations?  Kubernetes has the answer for us again.
+In this section we will explore some of the ways MongoDB works and perform some operations.  But considering that our laptops are *outside* of the cluster, how can we connect to MongoDB and perform operations?  Kubernetes has the answer for us again.
 
 
 ### 4.3.1 Connect to MongoDB
