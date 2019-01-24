@@ -73,7 +73,8 @@ While GUI's are nice they are hard for automation tools to interact with.  Let's
 
 ### 5.5.1 Windows
 
-Download the `mc.exe` command
+
+Download the `mc.exe` command and place it in your path.
 
 ### 5.5.2 Mac
 
@@ -84,6 +85,24 @@ brew install minio/stable/mc
 ```
 
 ## 5.6 Configure and Verify Minio Command line
+
+
+
+
+### 5.6.1 Windows
+
+For windows it may be easier to just type it out rather than place in your path.  Use something like the following command:
+
+![windows mc config](../images/minio03.png)
+
+The access key and secret key should be the same.  The only thing that might be different is the IP address but you should still put the `:9000` at the end:
+
+
+```
+mc config host add minio http://<your minio svc ip>:9000 AKIAIOSFODNN7EXAMPLE wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+```
+
+### 5.6.2 Mac
 
 Define the environment variables
 
@@ -122,7 +141,11 @@ Output will show something uploading:
 ...ktop/IMG_0952.JPG:  2.11 MB / 2.11 MB  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  100.00% 231.74 MB/s 0s
 ```
 
-You should verify that the image was properly placed in the storage bucket in the web interface.
+Or on Windows:
+
+![mc upload windows](../images/minio04.png)
+
+You should verify that the image was properly placed in the storage bucket in the web interface. 
 
 ## 5.8 Conclusion
 
