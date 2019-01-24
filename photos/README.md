@@ -1,8 +1,8 @@
-# 9. NodeJS Front End Photos
+# 9. NodeJS Front-end Photos
 
-We are now ready to make this application pretty and useable! This front end application was written as a  [React Application](https://github.com/facebook/create-react-app).  React is a javascript framework to develop our application.  Other common modern frameworks used today are [Angular](https://angularjs.org/) or [Vue](https://vuejs.org/).  How do you choose which one to use? You can go through [thorough analysis](https://medium.com/@TechMagic/reactjs-vs-angular5-vs-vue-js-what-to-choose-in-2018-b91e028fa91d) but the truth is that any one of those is probably a fine choice. 
+We are now ready to make this application pretty and usable! This front.end application was written as a [React Application](https://github.com/facebook/create-react-app).  React is a javascript framework to develop our application.  Other common modern frameworks used today are [Angular](https://angularjs.org/) or [Vue](https://vuejs.org/).  How do you choose which one to use? You can go through this [thorough analysis](https://medium.com/@TechMagic/reactjs-vs-angular5-vs-vue-js-what-to-choose-in-2018-b91e028fa91d), but the truth is that anyone of those is probably a fine choice. 
 
-...Although, one training company, Code School, definitely gave Angular JS the best theme song.  Have a look:
+... although, one training company, Code School, definitely gave Angular JS the best theme song.  Have a look:
 
 [![Shaping up with Angular](http://img.youtube.com/vi/PF3qr7mMmgA/0.jpg)](https://youtu.be/PF3qr7mMmgA)
 
@@ -19,13 +19,13 @@ We need to add a bucket and policies to our object store. We want to host the ap
 You can configure the policy by either using the web GUI (option A) or the command line client (option B).
 
 #### 9.1.1.1 Option A: GUI Method
-Log in to minio and click on the big red + sign to create a bucket named `photobook`.  Once it is created, hover over the bucket name in the left side bar to reveal three vertical dots:
+Log in to Minio and click on the big red + sign to create a bucket named `photobook`.  Once it is created, hover over the bucket name in the left side bar to reveal three vertical dots:
 
-This will give you three different js files.  Put them all in the `photobook` button. 
+This will give you three different `.js` files.  Put them all in the `photobook` button. 
 
 ![img](../images/photos01.png)
 
-Once created click on the three verticle dots to edit the policy. Create a __Read Only__ policy for every file by using the __*__.   
+Once created, click on the three verticle dots to edit the policy. Create a __Read Only__ policy for every file by using the __*__.   
 
 ![img](../images/photos02.png)
 
@@ -40,7 +40,7 @@ Aren't command line instructions so succinct?
 
 ## 9.2 Get API information
 
-Our front end application needs to talk to the functions, but the functions are called through the ingress controller.  We need to get the IP address of the ingress controller (again!) 
+Our front-end application needs to talk to the functions, but functions are called through the ingress controller.  We need to get the IP address of the ingress controller (again!) 
 
 We can see all of this information by typing the command: 
 
@@ -73,7 +73,7 @@ Events:
 
 ## 9.3 Modify Static Web Files
 
-You should have downloaded the source code for this exercise in the previous module.  Let's modify the application
+You should have downloaded the source code for this exercise in the previous module.  Let's modify the application:
 
 ```
 cd <src directory>./K8sServerless/photos
@@ -86,6 +86,7 @@ At the top of the file change the API variable to yours:
 - export const API = "http://10.10.20.200.xip.io"
 + export const API = "http://<your-IP>.xip.io"
 ```
+
 Everything else should remain the same. 
 
 ## 9.4 Compile the Pages
@@ -113,11 +114,11 @@ We will copy everything to the `photobook` directory using the minio `mc` comman
 mc cp --recursive build/ minio/photobook/
 ```
 
-if you have the browser open you should then see all the elements in the minio browser by refreshing
+if you have the browser open you should then see all the elements in the Minio browser by refreshing:
 
 ![img](../images/photos03.png)
 
-Or you can run `mc ls minio/photobook`
+Or you can run `mc ls minio/photobook`:
 
 ```
 mc ls minio/photobook
@@ -133,14 +134,14 @@ mc ls minio/photobook
 
 ## 9.6 Access the Static Web Contents
 
-Using the minio URL (not the ingress URL you found above) you should now be able to access the web site.  Note that you don't put `minio` in the url:
+Using the Minio URL (not the ingress URL you found above) you should now be able to access the web site.  Note that you don't put `minio` in the url:
 
 e.g: 
 ```
 http://10.10.20.201:9000/photobook/index.html
 ```
 
-don't do: 
+Don't do: 
 
 ```
 http://10.10.20.201:9000/minio/photobook/index.html
@@ -152,7 +153,7 @@ The webpage should then be visible:
 
 ## 9.7 Test the Webpage
 
-Alright, let's upload some photos to see what happens.  Click the plus at the bottom and see what happens
+Alright, let's upload some photos to see what happens.  Click the *plus* icon at the bottom and see what happens.
 
 ### 9.7.1 Debugging
 
@@ -168,11 +169,11 @@ kubeless function logs uploads
 
 Look for different errors you might have with database connections or python issues.
 
-Our app unfortunately doesn't do a very good job in helping us debug problems.  In fact, as a developer you spend quite a bit of time writing for cases of malicious users.  Since none of you are malicious I spent little time putting work like that into this application. :-)
+Our app unfortunately doesn't do a very good job in helping us debug problems.  In fact, as a developer you spend quite a bit of time writing for cases of malicious users.  Since none of you are malicious I spent little time putting work like that into this application. :smiley:
 
 ## 9.8 Development
 
-Perhaps there are changes you would like to make to the code? To do that we can run the code locally and make changes.  React has a nice way of rendering and making changes as we change files. 
+Perhaps there are changes you would like to make to the code?  To do that we can run the code locally and make changes.  React has a nice way of rendering and making changes as we change files. 
    
 ```
 cd ./K8sServerless/photos
@@ -192,7 +193,7 @@ Our lab directory has two folders that matter to us:
 
 #### 9.8.1.1 Bootstrap for CSS
 
-The `./public` directory is where we place all our images, fonts, and stylesheets as well as the public `index.html` file.  The only part you may wish to change is the contents of `./public/css/main.css`. There isn't too much in it because most of our css uses bootstrap.  The [documentation for bootstrap](https://getbootstrap.com/docs/4.0/getting-started/introduction/) is quite good and full of examples.  Therefore most of the changes you will do will just use bootstrap classes.  
+The `./public` directory is where we place all our images, fonts, and stylesheets as well as the public `index.html` file.  The only part you may wish to change is the contents of `./public/css/main.css`. There isn't too much in it, because most of our CSS uses bootstrap.  The [documentation for bootstrap](https://getbootstrap.com/docs/4.0/getting-started/introduction/) is quite good and full of examples.  Therefore most of the changes you will do will just use bootstrap classes.  
 
 The `./src/components` directory holds the parts that are rendered.  There is one file called `NavBar.js`.  
 
@@ -204,7 +205,7 @@ Hint: look at the docs for `navbar-dark bg-dark`
 
 #### 9.8.1.2 React Components
 
-The idea of files in the `./src/components` directory is that they be small and reusable for different parts of the application.  This is great as the application gets bigger and you only want to write things once. There is one file called `Home.js` that renders all the photos.  You can see that it is passed in to the component as a variable `photos`.  Assuming you did the challenge to add the date in the [previous kubeless module](../kubeless/README.md) you should be able to also display the date the photo was uploaded.  
+The idea of files in the `./src/components` directory is that they be small and reusable for different parts of the application.  This is great as the application gets bigger and you only want to write things once. There is one file called `Home.js` that renders all the photos.  You can see that it is passed in to the component as a variable `photos`.  Assuming you did the challenge to add the date in the [previous Kubeless module](../kubeless/README.md) you should be able to also display the date the photo was uploaded.  
 
 ##### Challenge 9.2: Can you add the date to be displayed with each of the photos?
 
@@ -218,14 +219,15 @@ Assuming your code has been modified you can rebuild and deploy it:
 npm run build 
 mc cp --recursive build/ minio/photobook/
 ```
+
 You can then open your browser with your updates.  You are an amazingly efficient developer!
 
-How could you add something like this to a CI/CD pipeline?  The front end is pretty straight forward.  How about the backend?  How do you do version control? What about A/B testing?
+How could you add something like this to a CI/CD pipeline?  The front end is pretty straight forward.  How about the backend?  How do you do version control?  What about A/B testing?
 
 
 ### 9.9 Conclusion
 
-In this lab you deployed your front end code to work with the photobook.  Users can now upload photos to their hearts content.  They can view them and even delete them. 
+In this lab you deployed your front-end code to work with the photobook.  Users can now upload photos to their hearts content.  They can view them and even delete them. 
 
 ## Where to next?
 
