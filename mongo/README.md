@@ -1,23 +1,24 @@
-# 4. Mongo DB
+# 4. MongoDB
 
 ## 4.1 Install MongoDB
 
-Now that we have helm let's put it to the test and install a mongo db database.  But wait! you say, installing a database is hard work!  Well let's just see about that!  Run the command:
+Now that we have helm let's put it to the test and install a MongoDB database.  But wait! you say, installing a database is hard work!  Well let's just see about that!  Run the command:
 
 ```
 helm install stable/mongodb --name fonkdb
 ```
 
-And just like that you created a mongodb database suitable for our application needs. It even gives you a few notes at the end as to how to connect to it.  Let's do this now to explore how to use a no-sql database.
+And just like that you created a MongoDB database suitable for our application needs. It even gives you a few notes at the end on to how to connect to it.  Let's do this now to explore how to use a NoSQL database.
 
 ## 4.2 Verify MongoDB is operational
 
-
-We can make sure our mongo database is up with:
+We can make sure our MongoDB database is up with:
 
 ```
 kubectl get pods,services -l app=mongodb
 ```
+
+(note: `-l` lets you filter the list of pods and services, so you only see the ones labelled as belonging to the MongoDB application )
 
 The output is:
 
@@ -29,11 +30,11 @@ NAME                     TYPE           CLUSTER-IP       EXTERNAL-IP     PORT(S)
 service/fonkdb-mongodb   LoadBalancer   10.107.150.119   10.93.140.132   27017:30943/TCP   2m
 ```
 
-Make sure that the container is in `RUNNING` state.  We should now have access to our database!  
+Make sure that the container is in `RUNNING` state.  If not there yet, just wait one minute and check again.  We should now have access to our database!  
 
 To delete this we could run `helm delete --purge fonkdb`
 
-You'll notice that the database `svc` is not given an `EXTERNAL-IP`.  This is not something we want to change.  The database sits in the background and we want as much protection around it as possible.
+You'll notice that the database service (`svc`) is not given an `EXTERNAL-IP`.  This is not something we want to change.  The database sits in the background and we want as much protection around it as possible, so it does not need to be accessible from outside the cluster.
 
 ## 4.3 Testing MongoDB
 
@@ -62,7 +63,7 @@ kubectl get secret --namespace default fonkdb-mongodb -o jsonpath="{.data.mongod
 
 Put the output of this command into [https://www.base64decode.org](https://www.base64decode.org) to decode and get the password.  Make note of this password for the next step. 
 
-#### 4.3.1.3 Connect to Mongo
+#### 4.3.1.3 Connect to MongoDB
 
 Now we can connect with:
 
@@ -74,7 +75,7 @@ kubectl run --namespace default fonkdb-mongodb-client --rm --tty -i --image bitn
 
 This might take some time to download the container image, so be patient as it starts.  
 
-This will put us at the mongo db console to run some commands. 
+This will put us at the MongoDB console to run some commands. 
 
 
 You'l see a command prompt:
@@ -84,7 +85,7 @@ If you don't see a command prompt, try pressing enter.
 >
 ```
 
-MongoDB is a document database.  We can read, add, and change information in the document.  We don't need any structure.  For example, let's suppose we had a bunch of fashionable bags we were selling.  We could create a document that had 1 hand bag:
+MongoDB is a document database.  We can read, add, and change information in the document.  We don't need any structure.  For example, let's suppose we had a bunch of fashionable bags we were selling.  We could create a document that had one hand bag:
 
 ```json
 {
@@ -131,9 +132,9 @@ This will print out the entry that we created.  But we'll see that it added a fi
 ```
 An `_id` field of `ObjectId`.  What is this?  
 
-MongoDB ads a unique field for every document entered.  If you don't specify one (which you can) then Mongo creates its own.  It is of type [ObjectId](https://docs.mongodb.com/manual/reference/method/ObjectId/).  In this way it can reference every document uniquely.  
+MongoDB adds a unique field for every document entered.  If you don't specify one (which you can) then MongoDB creates its own.  It is of type [ObjectId](https://docs.mongodb.com/manual/reference/method/ObjectId/).  In this way it can reference every document uniquely.  
 
-### 4.3.3 Updating A document
+### 4.3.3 Updating a document
 
 Now let's suppose that someone bought one of these types of bags.  We would need to decrement the quantity.  To do this, we need to modify the record.  We can use the `_id` field to update the record.  Type the following: 
 
@@ -148,7 +149,7 @@ Reading it back, we can see that it is now quantity `39`.
 db.Inventory.find().forEach(printjson)
 ```
 
-The power of using unstructured data is that we can now add a field to our object.  Let's suppose that we want to add a field that shows the color of this item. (Again put in your object ID for this command)
+The power of using unstructured data is that we can now add a field to our object.  Let's suppose that we want to add a field that shows the color of this item (again put in your object ID for this command).
 
 ```
 db.Inventory.update({"_id" : ObjectId("<YOUR OBJECT ID>")}, {$set: {"color" : "white" }});
@@ -180,8 +181,8 @@ When it comes down to it, all we are doing with applications are updating and mo
 
 ## Sources
 
-* [Mongo CRUD Operations](https://docs.mongodb.com/manual/crud/)
-* [Mongo Guru99 Tutorial](https://www.guru99.com/mongodb-query-document-using-find.html)
+* [MongoDB CRUD Operations](https://docs.mongodb.com/manual/crud/)
+* [MongoDB Guru99 Tutorial](https://www.guru99.com/mongodb-query-document-using-find.html)
 
 ## Where to next?
 
