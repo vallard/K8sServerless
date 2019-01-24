@@ -16,7 +16,15 @@ For quick installations (no package manager system) you can simply download the 
 
 1. [Download Binary](
 https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/windows/amd64/kubectl.exe)
-2. Put the binary in your path.
+2. Put the binary in your path.  This can be done by creating a directory for `kubectl	` and putting that directory into the path, or putting `kubectl` into a directory that is already in your path.
+
+To change environment variables in Windows, type 'environment` in the search bar and open the environments program.
+
+![environment windows](../images/k8s05.png)
+
+You can then see the PATH variable and edit that. 
+
+![path windows](../images/k8s06.png)
 
 ### 2.1.2 MacOS
 

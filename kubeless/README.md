@@ -282,7 +282,12 @@ kubeless function deploy thumb \
 
 ### 6.5.6 Test the `resize` function
 
-Now upload an image in the `uploads` bucket but be sure the extension is `jpeg` or `JPEG`.  You should instantly see a smaller version appear in the `/thumbs` directory!
+Now upload an image in the `uploads` bucket but be sure the extension is `jpeg` or `JPEG`.  
+
+![kubeless upload](../images/kubeless01.png)
+
+
+You should instantly see a smaller version appear in the `/thumbs` directory!
 
 If it didn't work, check your extension again.  Then use some of the debugging tools we looked at earlier:
 
