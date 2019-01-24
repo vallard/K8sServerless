@@ -1,8 +1,8 @@
 # 2. CCP Kubernetes
 
-Cisco Container Platform provides an environment where we are able to launch kubernetes clusters and manage the lifecyle of the clusters including easy updates and migrations. 
+Cisco Container Platform provides an environment where we are able to launch kubernetes clusters and manage the lifecyle of the clusters including easy updates and migrations.
 
-In this module we will show some kubernetes commands we will be using to navigate around our cluster. 
+In this module we will show some kubernetes commands we will be using to navigate around our cluster.
 
 ## 2.1 Get `kubectl`
 
@@ -16,7 +16,7 @@ For quick installations (no package manager system) you can simply download the 
 
 1. [Download Binary](
 https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/windows/amd64/kubectl.exe)
-2. Put the binary in your path. 
+2. Put the binary in your path.
 
 ### 2.1.2 MacOS
 
@@ -30,7 +30,7 @@ mv ./kubectl /usr/local/bin/
 
 ### 2.1.3 Test Kubectl
 
-To make sure it works run: 
+To make sure it works run:
 
 ```
 kubectl version
@@ -120,7 +120,7 @@ Let's take a look at all the pods in our current namespace:
 kubectl get pods
 ```
 
-As you can see there are not any.  But I assure you there are pods running, just not in your namespace. 
+As you can see there are not any.  But I assure you there are pods running, just not in your namespace.
 
 Kubernetes runs inside kubernetes.  Those resources in CCP and most kubernetes distributions run inside the `kube-system` namespace.  We can look at all the pods in there by running:
 
@@ -128,7 +128,7 @@ Kubernetes runs inside kubernetes.  Those resources in CCP and most kubernetes d
 kubectl get pods -n kube-system
 ```
 
-You will see quite a few containers running here.  These are the containers that keep kubernetes running. 
+You will see quite a few containers running here.  These are the containers that keep kubernetes running.
 
 ##### Challenge 2.2:  How can you list all pods in all namespaces?  (hint: kubectl get --help)
 
@@ -144,9 +144,9 @@ Deployments tell pods how they should be deployed.  Let's deploy an Nginx servic
 ```
 kubectl run ngx1 --image=nginx --replicas=3
 ```
-This will deploy 3 nginx pods.  You'll see them all ready as it downloads. 
+This will deploy 3 nginx pods.  You'll see them all ready as it downloads.
 
-We can kill some of the pods and they will be recreated. Kill one of your pods by running: 
+We can kill some of the pods and they will be recreated. Kill one of your pods by running:
 
 ```
 kubectl delete pod <pod name>
@@ -200,23 +200,25 @@ You'll see an `EXTERNAL-IP` address you can now access.  Point your web browser 
 
 ![ngx1](../images/k8s02.png)
 
+Alternatively, you can use the IP address of your cluster (see the results of the `cluster-info` command earlier) with the mapped port seen in the `get svc` command after `80:`.
+
 ### 2.3.5 Ingress
 
-CCP comes installed with an Ingress Controller.  An ingress controller allows trafic from the outside to be routed into services inside the cluster.  For example, if we had an app but we wanted one of the directories to be `/blog` we might want traffic coming into the app with the `/blog` directory to get routed to a different application.  It would look from the outside like the same application but internally it would run on different pods. 
+CCP comes installed with an Ingress Controller.  An ingress controller allows trafic from the outside to be routed into services inside the cluster.  For example, if we had an app but we wanted one of the directories to be `/blog` we might want traffic coming into the app with the `/blog` directory to get routed to a different application.  It would look from the outside like the same application but internally it would run on different pods.
 
-Let's illustrate with an example. 
+Let's illustrate with an example.
 
 ##### Challenge 2.6: Change the `ngx1` service back into type ClusterIP
 
 With the service back to `ClusterIP` we can't access it from the outside.  However, we have an ingress controller:
 
 ```
-get svc -n ccp nginx-ingress-controller
+kubectl get svc -n ccp nginx-ingress-controller
 ```
 
 Don't mistake the name here.  It happens to be that we are using `nginx` as an [ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-controllers).  But we are also using `nginx` as our application for serving up web pages.  It's quite flexible!  
 
-This ingress controller has an `EXTERNAL-IP`.  We can make a rule that when someone goes to that IP address (or dns) we can layer 7 route it to the `ngx1` application. 
+This ingress controller has an `EXTERNAL-IP`.  We can make a rule that when someone goes to that IP address (or dns) we can layer 7 route it to the `ngx1` application.
 
 [Download the ingress rule yaml](https://raw.githubusercontent.com/vallard/K8sServerless/master/kubernetes/ngx1-ing.yaml) file and open it up to edit it.  
 
@@ -242,17 +244,17 @@ Assuming you were able to change the `ngx` to `svc` then you will be able to see
 kubectl get ing
 ```
 
-Now you should be able to open the browser again to: 
+Now you should be able to open the browser again to:
 
-[http://ngx1.10.10.20.200.xip.io/](http://ngx1.10.10.20.200.xip.io/) and see the same happy nginx page.  __Note:__ you should make sure its your ingress controller service IP address that you point it to. 
+[http://ngx1.10.10.20.200.xip.io/](http://ngx1.10.10.20.200.xip.io/) and see the same happy nginx page.  __Note:__ you should make sure its your ingress controller service IP address that you point it to.
 
-Why did we use xip?  Well, the ingress controller works by examining what the domain name was on the HTTP request.  It uses the domain name then to route to the appropriate Kubernetes service by following the ingress rule that you created. 
+Why did we use xip?  Well, the ingress controller works by examining what the domain name was on the HTTP request.  It uses the domain name then to route to the appropriate Kubernetes service by following the ingress rule that you created.
 
 ## 2.4 Other CCP Kubernetes
 
 CCP comes built in with monitoring and [Prometheus](https://prometheus.io/).  The support is there with Cisco TAC so this offers exceptional value.  
 
-Let's log into the monitoring of our project by going back to the Kubernetes dashboard and looking at Grafana. 
+Let's log into the monitoring of our project by going back to the Kubernetes dashboard and looking at Grafana.
 
 ![monitoring](../images/k8s04.png)
 
@@ -267,7 +269,7 @@ If you don't have the base64 command or pipe run the command and then go to an o
 The monitoring on sandbox is a little rough given that it is an emulated environment. However seeing it all laid out can be handy.  
 
 
-## 2.5 Conclusion	
+## 2.5 Conclusion
 
 This concludes our brief tour of kubernetes.  We will be using services, pods, deployments, ingress controllers and some other things we didn't cover as well later on. We just need to add some more infrastructure components before we can construct our application!
 

@@ -4,12 +4,12 @@ For our application we need a place to store pictures.  Object storage is good f
 
 ## 5.1 Create a Minio Object Storage System
 
-Creating an instance of minio with helm is simple. We have, however, added an additional configuration to the service to modify things slightly for our application.  To install this we run: 
+Creating an instance of minio with helm is simple. We have, however, added an additional configuration to the service to modify things slightly for our application.  To install this we run:
 
 ```
 helm install stable/minio --name fonkfe -f https://raw.githubusercontent.com/vallard/K8sServerless/master/minio/config.yaml
 ```
- 
+
 
 ### 5.1.1 An aside...
 If you wanted to customize minio, you can edit the helm chart config.  You can start by getting the default chart config with:
@@ -23,26 +23,26 @@ You could then change values and update it with:
 helm upgrade -f minio-helm-config.yaml fonkfe stable/minio
 ```
 
-##### Challenge 5.1: What did we change from the default configuration? 
+##### Challenge 5.1: What did we change from the default configuration?
 
 ## 5.2 Verify Minio is up
 
-Ok, let's see if minio is up: 
+Ok, let's see if minio is up:
 
 ```
 kubectl get pods -l app=minio
 ```
 
-This returns: 
+This returns:
 
 ```
 fonkfe-544ddf6b86-qpcwf          1/1       Running   0          18m
 ```
-Be sure your pods are `Running` so that things work. 
+Be sure your pods are `Running` so that things work.
 
 ## 5.3 Accessing Minio
 
-Now we want to be able to connect to the frontend from the public Internet.  (Well we are behind a VPN, but the idea is the same).  In order to do this there are two ways we could expose our minio instance.  The first is to use a LoadBalancer `EXTERNAL-IP` which is easy, the second is to use an ingress rule as we showed in the [Kubernetes Lab](../kubernetes/README.md).  In our helm chart we already configured this to be of type `LoadBalancer` so you should see an `EXTERNAL-IP` already for your instance of minio. 
+Now we want to be able to connect to the frontend from the public Internet.  (Well we are behind a VPN, but the idea is the same).  In order to do this there are three ways we could expose our minio instance.  The first is to use a LoadBalancer `EXTERNAL-IP` which is easy, the second is to use an ingress rule as we showed in the [Kubernetes Lab](../kubernetes/README.md).  The third is to use the IP address of the cluster and the mapped port for the Minio service. In our helm chart we already configured this to be of type `LoadBalancer` so you should see an `EXTERNAL-IP` already for your instance of minio.
 
 ##### Challenge 5.2: What is the external IP address of Minio?
 
@@ -52,12 +52,12 @@ Now we want to be able to connect to the frontend from the public Internet.  (We
 To log in we need the access key and the secret key.  These are stored in the minio secrets file.  You can grab them by examining the `fonkfe` secrets file and base64 decoding the secrets.  However, we have the defaults so we will forgo any decoding exercises for now.  The credentials are:
 
 ```
-Access Key: AKIAIOSFODNN7EXAMPLE 
+Access Key: AKIAIOSFODNN7EXAMPLE
 Secret Key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 ```
 
 
-Log into minio with these values at the IP address you found in __challenge 5.2__.  Notice that minio isn't accessible on port `80`.  How can you find out which port to access minio? 
+Log into minio with these values at the IP address you found in __challenge 5.2__.  Notice that minio isn't accessible on port `80`.  How can you find out which port to access minio?
 
 ![minio](../images/minio01.png)
 
@@ -67,11 +67,12 @@ Once logged in you'll see the contents available to you. At this point, there sh
 
 ## 5.5 Minio Command Line Client
 
-While GUI's are nice they are hard for automation tools to interact with.  Let's use the command line client to interact with minio. 
+While GUI's are nice they are hard for automation tools to interact with.  Let's use the command line client to interact with minio.
 
 [Download the latest client](https://docs.minio.io/docs/minio-client-complete-guide) for your Operating System
 
 ### 5.5.1 Windows
+
 
 Download the `mc.exe` command and place it in your path.
 
@@ -117,7 +118,7 @@ Make use of the environment variables to configure minio.  _Make sure you change
 mc config host add minio $MINIO_HOST $ACCESS_KEY $SECRET_KEY --api S3v4
 ```
 
-Look at all buckets
+Look at all `mc` hosts:
 
 ```
 mc config host list
@@ -135,7 +136,7 @@ mc cp ~/Desktop/IMG_0952.JPG minio/test/
 ```
 
 Output will show something uploading:
- 
+
 ```
 ...ktop/IMG_0952.JPG:  2.11 MB / 2.11 MB  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  100.00% 231.74 MB/s 0s
 ```

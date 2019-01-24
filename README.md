@@ -4,7 +4,7 @@
 
 You usually hear about serverless in the public clouds such as AWS, Google, and Microsoft.  But thanks to Kubernetes we can also run serverless on prem using the [serverless framework](https://serverless.com) with several different kubernetes serverless integrations.  
 
-In this tectorial we will create a photobook application from the ground up that uses serverless frameworks on top of Kubernetes.  
+In this tectorial we will create a photobook application from the ground up that uses Functions-as-a-Service (FaaS) runtimes on top of Kubernetes.  
 
 ![img](images/arch02.png)
 
@@ -23,7 +23,7 @@ Below are the contents of the two sections in our course.  You can refer back to
 * [5. Minio](minio/README.md)
 * [6. Kubeless](kubeless/README.md)
 
-## Part II: Building the Application 
+## Part II: Building the Application
 
 
 * [7. Application Overview](photos/OVERVIEW.md)
@@ -35,13 +35,10 @@ Below are the contents of the two sections in our course.  You can refer back to
 
 Much of the work here is based off the [FONK](https://fonk-apps.io) idea that [Pete Johnson](https://twitter.com/nerdguru) has been developing.  
 
-[Julio Gomez](https://twitter.com/juliodevops) also has made large contributions by speaking and adding code to this terrific movement. 
+[Julio Gomez](https://twitter.com/juliodevops) also has made large contributions by speaking and adding code to this terrific movement.
 
-Without great projects like [Minio](https://minio.io), [Kubeless](https://kubeless.io), and [Serverless](https://serverless.com) much of this would not be possible. 
+Without great projects like [Minio](https://minio.io), [Kubeless](https://kubeless.io), and [Serverless](https://serverless.com) much of this would not be possible.
 
 We are hopeful that as we go forward more people find the ideas of serverless bring great promise to on prem workloads and are not limited to public clouds only.
 
 Serverless is still very much in its infancy and more tools and better techniques are still needed to make the experience better.   
-
-
-
