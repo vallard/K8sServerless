@@ -172,7 +172,7 @@ This will create a service we can see with:
 kubectl get svc
 ```
 
-We notice that the ngx1 service has no external IP address.  Therefore, we can't see it from the outside.  We can change that by giving the service a [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) IP address.  By default they are just given cluster internal IP addresses.  
+We notice there are two IP addresses a service can have.  An internal IP known as the `ClusterIP` and an `External IP`.  The `ClusterIP` is how the pods can reach this service from inside the cluster.  However, if we want to be able to access this service from outside the cluster we need to give it an `External IP`.  We can change that by giving the service a [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) IP address.  By default they are just given cluster internal IP addresses.  
 
 To change this we run:
 

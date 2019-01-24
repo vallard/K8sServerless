@@ -42,22 +42,43 @@ In this section we will explore some of the ways MongoDB works and perform some 
 
 ### 4.3.1 Connect to MongoDB
 
+
+#### 4.3.1.1 Connecting with Mac
+
 Let's first get the password so we can login.  
 
 ```
 export MONGODB_ROOT_PASSWORD=$(kubectl get secret --namespace default fonkdb-mongodb -o jsonpath="{.data.mongodb-root-password}" | base64 --decode)
 ```
+This will export the environment variable `MONGODB_ROOT_PASSWORD` that you will use in the next part. 
+
+#### 4.3.1.1 Password with Windows or no `base64` command
+
+Run the command:
+
+```
+kubectl get secret --namespace default fonkdb-mongodb -o jsonpath="{.data.mongodb-root-password}"
+```
+
+Put the output of this command into [https://www.base64decode.org](https://www.base64decode.org) to decode and get the password.  Make note of this password for the next step. 
+
+#### 4.3.1.3 Connect to Mongo
 
 Now we can connect with: 
 
 ```
 kubectl run --namespace default fonkdb-mongodb-client --rm --tty -i --image bitnami/mongodb --command -- mongo admin --host fonkdb-mongodb --authenticationDatabase admin -u root -p $MONGODB_ROOT_PASSWORD
 ```
+(If you copied from [base64decode.org](https://www.base64decode.org) then use that password instead of `$MONGODB_ROOT_PASSWORD`.)
+
+This might take some time to download the container image, so be patient as it starts.  
+
 This will put us at the mongo db console to run some commands. 
 
 You'l see a command prompt:
 
 ```
+If you don't see a command prompt, try pressing enter.
 >
 ```
 
@@ -78,11 +99,12 @@ First let's create our store:
 > use Inventory
 ```
 
-This will create our database if it wasn't created already.  Now let's create a collection, or a table.  This will be a collection of documents or records in this database.  T
+This will create our database if it wasn't created already.  Now let's create a collection, or a table.  This will be a collection of documents or records in this database.  Type the below at the prompt:
 
 ```
 db.Inventory.insert( { "brand" : "Versace", "description": "small quilted icon shoulder bag", "quantity" : 40 } )
 ```
+
 We will get back the output: 
 
 ```
@@ -110,7 +132,7 @@ MongoDB ads a unique field for every document entered.  If you don't specify one
 
 ### 4.3.3 Updating A document
 
-Now let's suppose that someone bought one of these types of bags.  We would need to decrement the quantity.  To do this, we need to modify the record.  We can use the `_id` field to update the record.  
+Now let's suppose that someone bought one of these types of bags.  We would need to decrement the quantity.  To do this, we need to modify the record.  We can use the `_id` field to update the record.  Type the following: 
 
 ```
 db.Inventory.update({"_id" : ObjectId("<YOUR OBJECT ID>")},
@@ -147,8 +169,10 @@ In structured SQL we would have to add another column.  In NoSQL we can simply a
 Finally, we can remove this object from the database: 
 
 ```
-db.Inventory.remove({"_id" : ObjectId("<YOUR OBJECT ID>")})
+db.Inventory.remove({"brand" : "Versace"})
 ```
+
+Notice that we didn't just remove the `_id` we removed all with the brand `Versace`. 
 
 When it comes down to it, all we are doing with applications are updating and modifying databases. 
 
