@@ -282,7 +282,7 @@ kubeless function deploy thumb \
 
 ### 6.5.6 Test the `resize` function
 
-Now upload an image in the `uploads` bucket but be sure the extension is `jpeg` or `JPEG`.  
+Now upload an image to the `uploads` bucket, and **please make sure the extension is `jpeg` or `JPEG`**.  
 
 ![kubeless upload](../images/kubeless01.png)
 
