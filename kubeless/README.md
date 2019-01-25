@@ -297,9 +297,9 @@ kubectl logs -f <pod_name>
 
 ### 6.6 Kubeless Conclusion
 
-This module shows how `kubeless` can create functions.  They are quick and powerful.  They create services and pods.  We don't need to worry about creating the containers for our runtimes and can just write the code.  In this case we just wrote some python code and the service put it into containers ready to use.  
+This module shows how `kubeless` can create functions.  They are quick and powerful.  They create services and pods.  We don't need to worry about creating the containers for our runtimes, and can just focus on writing code.  In this case we just wrote some python code and the service put it into containers ready to use.  
 
-* No `Dockerfile`s required
+* No `Dockerfile` required.
 * No `yaml` files created.  
 
 But how would you test such a function in a serverless world?  How do you iterate?  How do you do rollbacks?  How do you integrate it into a CI/CD pipeline?  Many of these questions are still being looked at and have not been solved in a one size fits all manner.
@@ -310,7 +310,7 @@ But how would you test such a function in a serverless world?  How do you iterat
 
 ###### Challenge 6.2 Hint:
 
-After changing code you need to update the function, and you can use:
+After changing the code you need to update the function with the following command:
 
 ```
 kubeless function update thumb -f resize.py
