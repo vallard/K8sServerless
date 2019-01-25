@@ -292,7 +292,7 @@ You should instantly see a smaller version appear in the `/thumbs` directory!
 If it didn't work, check your extension again.  Then use some of the debugging tools we looked at earlier:
 
 ```
-kubectl logs -f <pod name>
+kubectl logs -f <pod_name>
 ```
 
 ### 6.6 Kubeless Conclusion
