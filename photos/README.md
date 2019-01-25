@@ -230,6 +230,6 @@ In this lab you deployed your front-end code to work with the photobook.  Users 
 
 * [Go Back Home](../README.md)
 * [Previous Module: Kubeless](../minio/kubeless.md)
-* [Next Module: Object Detection](../yolo/README.md)
+* [Next Module: Object Recognition](../yolo/README.md)
 
 
