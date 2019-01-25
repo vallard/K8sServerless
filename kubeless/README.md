@@ -31,7 +31,7 @@ replicaset.apps/kubeless-controller-manager-574cf75749   1         1         0  
 
 ## 6.2 Patch the Python Runtime
 
-Each serverless function runs in a container.  We call this the `runtime` container.  You can see the runtime environments on the [kubeless github page](https://github.com/kubeless/runtimes).  As serverless is new, and constantly evolving, things change quick.  However this also means that certain features you may want for your apps are not included in the runtimes.  
+Each serverless function runs in a container.  We call this the `runtime` container.  You can see the runtime environments on the [Kubeless GitHub page](https://github.com/kubeless/runtimes).  As serverless is new, and constantly evolving, things change quick.  However this also means that certain features you may want for your apps are not included in the runtimes.  
 
 The features of [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) and file uploads are not included.  Fortunately, we can patch this by using our own runtime environment.
 
