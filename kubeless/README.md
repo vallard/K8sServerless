@@ -156,7 +156,7 @@ export AL=$(kubectl get pods | grep alp | awk '{print $1}')
 kubectl exec -it $AL /bin/sh
 ```
 
-This will put you *in* the pod.  We can now call the service within this pod, since we have access to `ClusterIP`s in the pod space:
+This will put you *in* the pod.  From there we can now call the *hello* function, since the pod has access to the function's service `ClusterIP` (only reachable for pods inside the cluster):
 
 
 ```
