@@ -56,7 +56,7 @@ Secret Key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 ```
 
 
-Log into minio with these values at the IP address you found in __challenge 5.2__.  Notice that Minio isn't accessible on port `80`.  How can you find out which port to access minio?
+Log into Minio with these values at the IP address you found in __challenge 5.2__.  Notice that Minio isn't accessible on port `80`.  How can you find out which port to access Minio?
 
 ![minio](../images/minio01.png)
 
@@ -66,7 +66,7 @@ Once logged in you'll see the contents available to you. At this point, there sh
 
 ## 5.5 Minio Command Line Client
 
-While GUIs are nice, they are also hard for automation tools to interact with.  Let's use the command line client to interact with minio.
+While GUIs are nice, they are also hard for automation tools to interact with.  Let's use the command line client to interact with Minio.
 
 [Download the latest client](https://docs.minio.io/docs/minio-client-complete-guide) for your Operating System
 
