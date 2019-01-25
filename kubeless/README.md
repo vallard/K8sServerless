@@ -232,13 +232,13 @@ You will see an entry:
 		}
 ```
 
-This is the first webhook `1` that is available to us.  Let's use it:
+This is the first webhook `1` that is available to us.  This entry just defines what endpoint will be notified when a relevant event occurs.  Let's define that event as the upload of a file to the *uploads* folder in Minio:
 
 ```
 mc event add minio/uploads arn:minio:sqs:us-east-1:1:webhook --event put
 ```
 
-You could also filter by suffixes of items, but this is difficult if they use JPEG, jpg, Jpeg, etc for extension names.  Without the filter all items trigger a notification.
+You could also define the specific type of files to be considered as an *event*, filtering by file extensions. But this is specially difficult for photos, as they can use multiple different extensions: JPEG, jpg, Jpeg, etc.  For our event definition we are not using any filter, so all uploaded files will trigger a notification.
 
 We can now see the webhook is ready:
 
