@@ -158,7 +158,6 @@ kubectl exec -it $AL /bin/sh
 
 This will put you *in* the pod.  We can now call the service within this pod, since we have access to `ClusterIP`s in the pod space:
 
-
 ```
 apk add --no-cache curl  # install curl
 curl -L --data '{"Another": "Echo"}' \
@@ -185,7 +184,16 @@ In this case it was
 ```
 hello.default.svc.cluster.local
 ```
-By default we are in the same namespace and so we could leave everything else off and just use `hello`.
+
+So you could also try something like this:
+
+```
+curl -L --data '{"Another": "Echo"}' \
+  --header "Content-Type:application/json" \
+  hello.default.svc.cluster.local:8080
+```
+
+By default we are in the same namespace, so we could leave everything else off and just use `hello`.
 
 
 ### 6.4.5 Delete Sample Function
