@@ -1,6 +1,6 @@
 # 9. NodeJS Front-end Photos
 
-We are now ready to make this application pretty and usable! This front.end application was written as a [React Application](https://github.com/facebook/create-react-app).  React is a javascript framework to develop our application.  Other common modern frameworks used today are [Angular](https://angularjs.org/) or [Vue](https://vuejs.org/).  How do you choose which one to use? You can go through this [thorough analysis](https://medium.com/@TechMagic/reactjs-vs-angular5-vs-vue-js-what-to-choose-in-2018-b91e028fa91d), but the truth is that anyone of those is probably a fine choice. 
+We are now ready to make this application pretty and usable! This front-end application was written as a [React Application](https://github.com/facebook/create-react-app).  React is a JavaScript framework to develop our application.  Other common modern frameworks used today are [Angular](https://angularjs.org/) or [Vue](https://vuejs.org/).  How do you choose which one to use? You can go through this [thorough analysis](https://medium.com/@TechMagic/reactjs-vs-angular5-vs-vue-js-what-to-choose-in-2018-b91e028fa91d), but the truth is that anyone of those is probably a fine choice. 
 
 ... although, one training company, Code School, definitely gave Angular JS the best theme song.  Have a look:
 
@@ -14,18 +14,16 @@ Don't worry there isn't much to install now as you've done it all.  We'll just c
 
 ### 9.1.1 Setup Minio
 
-We need to add a bucket and policies to our object store. We want to host the application in this bucket but it must be read only by everyone in the world.  In buckets where web content is stored, we ensure that everything is public and don't put any sensitive data. 
+We need to add a bucket and policies to our object store. We want to host the application in this bucket, but it must be read only by everyone in the world.  In buckets where web content is stored, we must ensure that everything is public and don't put any sensitive data. 
 
 You can configure the policy by either using the web GUI (option A) or the command line client (option B).
 
 #### 9.1.1.1 Option A: GUI Method
-Log in to Minio and click on the big red + sign to create a bucket named `photobook`.  Once it is created, hover over the bucket name in the left side bar to reveal three vertical dots:
-
-This will give you three different `.js` files.  Put them all in the `photobook` button. 
+Log in to Minio and click on the big red + sign to create a bucket named `photobook`.
 
 ![img](../images/photos01.png)
 
-Once created, click on the three verticle dots to edit the policy. Create a __Read Only__ policy for every file by using the __*__.   
+Once it is created, hover over the bucket name in the left side bar to reveal three vertical dots. Click on those three vertical dots to edit the policy. Create a __Read Only__ policy for every file by using the __*__.   
 
 ![img](../images/photos02.png)
 
@@ -114,7 +112,7 @@ We will copy everything to the `photobook` directory using the minio `mc` comman
 mc cp --recursive build/ minio/photobook/
 ```
 
-if you have the browser open you should then see all the elements in the Minio browser by refreshing:
+If you have the browser open, you should see all the elements in the Minio browser by refreshing:
 
 ![img](../images/photos03.png)
 
@@ -134,7 +132,7 @@ mc ls minio/photobook
 
 ## 9.6 Access the Static Web Contents
 
-Using the Minio URL (not the ingress URL you found above) you should now be able to access the web site.  Note that you don't put `minio` in the url:
+Using the Minio URL (not the ingress URL you found above) you should now be able to access the web site.  Note that you don't put `minio` in the URL:
 
 e.g: 
 ```
@@ -161,15 +159,15 @@ If you get no response open the javascript console and see what errors may have 
 
 ![photos error](../images/photos05.png)
 
-You can check your upload function:
+You can check your *upload* function:
 
 ```
-kubeless function logs uploads
+kubeless function logs upload
 ```
 
 Look for different errors you might have with database connections or python issues.
 
-Our app unfortunately doesn't do a very good job in helping us debug problems.  In fact, as a developer you spend quite a bit of time writing for cases of malicious users.  Since none of you are malicious I spent little time putting work like that into this application. :smiley:
+Unfortunately our application doesn't do a very good job in helping us debug problems.  In fact, as a developer you spend quite a bit of time writing for cases of malicious users.  Since none of you are malicious, I spent little time putting work like that into this application. :smiley:
 
 ## 9.8 Development
 
@@ -193,7 +191,7 @@ Our lab directory has two folders that matter to us:
 
 #### 9.8.1.1 Bootstrap for CSS
 
-The `./public` directory is where we place all our images, fonts, and stylesheets as well as the public `index.html` file.  The only part you may wish to change is the contents of `./public/css/main.css`. There isn't too much in it, because most of our CSS uses bootstrap.  The [documentation for bootstrap](https://getbootstrap.com/docs/4.0/getting-started/introduction/) is quite good and full of examples.  Therefore most of the changes you will do will just use bootstrap classes.  
+The `./public` directory is where we place all our images, fonts, and stylesheets, as well as the public `index.html` file.  The only part you may wish to change is the contents of `./public/css/main.css`. There isn't too much in it, because most of our CSS uses bootstrap.  The [documentation for bootstrap](https://getbootstrap.com/docs/4.0/getting-started/introduction/) is quite good and full of examples.  Therefore most of the changes you will do will just use bootstrap classes.  
 
 The `./src/components` directory holds the parts that are rendered.  There is one file called `NavBar.js`.  
 
@@ -205,11 +203,11 @@ Hint: look at the docs for `navbar-dark bg-dark`
 
 #### 9.8.1.2 React Components
 
-The idea of files in the `./src/components` directory is that they be small and reusable for different parts of the application.  This is great as the application gets bigger and you only want to write things once. There is one file called `Home.js` that renders all the photos.  You can see that it is passed in to the component as a variable `photos`.  Assuming you did the challenge to add the date in the [previous Kubeless module](../kubeless/README.md) you should be able to also display the date the photo was uploaded.  
+The idea of files in the `./src/components` directory is that they be small and reusable for different parts of the application.  This is great as the application gets bigger and you only want to write things once. There is one file called `Home.js` that renders all the photos.  You can see that it is passed in to the component as a variable called `photos`.  Assuming you did the challenge to add the date in the [previous Kubeless module](../kubeless/README.md) you should be able to also display the date the photo was uploaded.  
 
 ##### Challenge 9.2: Can you add the date to be displayed with each of the photos?
 
-Hint: The code might look like [this](./answers/date.js)
+Hint: the code might look like [this](./answers/date.js)
 
 ### 9.8.2 Deploying Your Modified Code
 
@@ -222,8 +220,7 @@ mc cp --recursive build/ minio/photobook/
 
 You can then open your browser with your updates.  You are an amazingly efficient developer!
 
-How could you add something like this to a CI/CD pipeline?  The front end is pretty straight forward.  How about the backend?  How do you do version control?  What about A/B testing?
-
+How could you add something like this to a CI/CD pipeline?  The front-end is pretty straight forward.  How about the back-end?  How do you do version control?  What about A/B testing?
 
 ### 9.9 Conclusion
 
@@ -232,7 +229,7 @@ In this lab you deployed your front-end code to work with the photobook.  Users 
 ## Where to next?
 
 * [Go Back Home](../README.md)
-* [Previous Module: kubeless](../minio/kubeless.md)
-* [Next Module: Object Detection](../yolo/README.md)
+* [Previous Module: Kubeless](../minio/kubeless.md)
+* [Next Module: Object Recognition](../yolo/README.md)
 
 
