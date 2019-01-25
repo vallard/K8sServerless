@@ -44,7 +44,7 @@ Be sure your pods are `Running` so that things work.
 
 Now we want to be able to connect to the front-end from the public Internet (well, we are behind a VPN, but the idea is the same).  In order to do this, there are three ways we could expose our Minio instance.  The first one is to use a LoadBalancer `EXTERNAL-IP`, which is easy. The second way is to use an ingress rule, as we showed in the [Kubernetes Lab](../kubernetes/README.md).  And the third one is to use the Kubernetes cluster IP address and the mapped port for the Minio service. In our helm chart we already configured this to be of type `LoadBalancer` so you should see an `EXTERNAL-IP` already for your instance of Minio.
 
-##### Challenge 5.2: What is the external IP address of Minio?
+##### Challenge 5.3: What is the external IP address of Minio?
 
 ## 5.4 Log in to Minio browser
 
@@ -56,7 +56,7 @@ Secret Key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 ```
 
 
-Log into Minio with these values at the IP address you found in __challenge 5.2__.  Notice that Minio isn't accessible on port `80`.  How can you find out which port to access Minio?
+Log into Minio with these values at the IP address you found in __challenge 5.3__.  Notice that Minio isn't accessible on port `80`.  How can you find out which port to access Minio?
 
 ![minio](../images/minio01.png)
 
