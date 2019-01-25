@@ -41,7 +41,7 @@ CORS is _Cross-Origin Resource Sharing_. When the web application is from one or
 
 ### 6.2.2 Update the ConfigMap    
 
-We have already prepared a new runtime environment for this lab.  To use it we have to modify the [ConfigMap](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/) that we just installed with kubeless. To see it run:
+We have already prepared a new runtime environment for this lab.  To use it we have to modify the [ConfigMap](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/) that we just installed with Kubeless. To see it run:
 
 ```
 kubectl get cm -n kubeless
