@@ -158,7 +158,6 @@ kubectl exec -it $AL /bin/sh
 
 This will put you *in* the pod.  From there we can now call the *hello* function, since the pod has access to the function's service `ClusterIP` (only reachable for pods inside the cluster):
 
-
 ```
 apk add --no-cache curl  # install curl
 curl -L --data '{"Another": "Echo"}' \
@@ -166,25 +165,26 @@ curl -L --data '{"Another": "Echo"}' \
   hello:8080
 ```
 
-This will return exactly what you gave it:
+This will return exactly what you sent to it:
 
 ```
 {"Another": "Echo"}
 ```
 
-**Our first function as a service works!**
+**Our first function-as-a-service works!**
 
 Notice that the way we call other functions or services in kubernetes follows the form:
 
 ```
-<svc>.<namespace>.svc.<cluster domain>
+<svc>.<namespace>.svc.<cluster_domain>
 ```
 
-In this case it was
+In this case it was:
 
 ```
 hello.default.svc.cluster.local
 ```
+
 By default we are in the same namespace and so we could leave everything else off and just use `hello`.
 
 
