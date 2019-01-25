@@ -149,7 +149,13 @@ We can then call the function by either using a [proxy](https://kubernetes.io/do
 kubectl run alp --image=alpine -- sleep 60000
 ```
 
-This will deploy a `pod alp-xxxxxxxxxx-xxxxx`.  We can log into this pod with:
+This will deploy a `pod alp-xxxxxxxxxx-xxxxx`. Please wait until you see it *Running*:
+
+```
+kubectl get pods
+```
+
+And then log into this pod with:
 
 ```
 export AL=$(kubectl get pods | grep alp | awk '{print $1}')
