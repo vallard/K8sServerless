@@ -139,7 +139,7 @@ Where `<pod_name>` is the name of the pod that is failing.
 
 Kubeless deploys a [deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) and a [service](https://kubernetes.io/docs/concepts/services-networking/service/)
 
-This service, by default, is of type `ClusterIP`, so it can be called internally but not reached externally, unless we create an ingress rule or configurer the service as `LoadBalancer`.
+This service, by default, is of type `ClusterIP`, so it can be called internally but not reached externally, unless we create an ingress rule or configure the service as `LoadBalancer`.
 
 ### 6.4.4 Test the `hello` function
 
