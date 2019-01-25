@@ -69,7 +69,7 @@ Very carefully replace the python runtime image with:
 
 ### 6.2.3 Restart the `kubeless` pods
 
-Now we will delete the controller pod, so that it re-reads the ConfigMaps:
+Now we will delete the controller pod, so that it re-reads the ConfigMap:
 
 ```
 kubectl delete pods -n kubeless -l kubeless=controller
