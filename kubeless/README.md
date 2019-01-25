@@ -143,7 +143,7 @@ This service, by default, is of type `ClusterIP`, so it can be called internally
 
 ### 6.4.4 Test the `hello` function
 
-We can then call the function by either using a [proxy](https://kubernetes.io/docs/tasks/access-kubernetes-api/http-proxy-access-api/) or spin up our own container to run.  Let's use our own container to do talk to it.
+We can then call the function by either using a [proxy](https://kubernetes.io/docs/tasks/access-kubernetes-api/http-proxy-access-api/), or spin up our own container to run.  Let's use our own container to talk to it.
 
 ```
 kubectl run alp --image=alpine -- sleep 60000
