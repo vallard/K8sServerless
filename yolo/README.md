@@ -4,12 +4,12 @@ Object Recognition in photos has made many advances in the last several years.  
 
 ## 10.1 Introducing YOLO
 
-[YOLO](https://pjreddie.com/darknet/yolo/) is a real time object detection algorithm with a [flexible license](https://github.com/pjreddie/darknet/blob/master/LICENSE.fuck).  Like many machine learning algorithms it is open source and we are able to use it in many different applications free of charge. 
+[YOLO](https://pjreddie.com/darknet/yolo/) (You Only Look Once) is a real-time object detection algorithm with a [flexible license](https://github.com/pjreddie/darknet/blob/master/LICENSE.fuck).  Like many machine learning algorithms it is open source and we are able to use it in many different applications free of charge. 
 
 ![img](https://pjreddie.com/media/image/Screen_Shot_2018-03-24_at_10.48.42_PM.png)
 (source: [YOLO homepage](https://pjreddie.com/darknet/yolo/))
 
-We will take an implementation of this algorithm, that has already been trained, and use that model to do object recognition inside the photos that we upload.  We will then tag the data in our photos with the objects that the algorithm recognizes.
+We will take an implementation of this algorithm, that has already been trained, and use that model to do object recognition inside the photos that we upload.  We will then *tag* the data in our photos with the objects that the algorithm recognizes.
 
 ## 10.2 Install YOLO Detector
 
@@ -50,7 +50,7 @@ This will create a deployment and a service in Kubernetes called `yolo`.  It may
 
 We have a service, but we need an event mechanism to invoke the function.  How can we hook it up to the application? 
 
-Currently it stands alone as a separate service.  We could have it be called as another webhook similar to how the image is called.  But why not go for scale here and instead use [kafka](https://kafka.apache.org/)?  That way we can create a [Pub/Sub](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) mechanism to deal with scale. 
+Currently it stands alone as a separate service.  We could have it be called as another webhook similar to how the image is called.  But why not go for scale here and instead use [Kafka](https://kafka.apache.org/)?  That way we can create a [Pub/Sub](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) mechanism to deal with at scale. 
 
 ![img](../images/yolo01.png) 
 
@@ -94,7 +94,7 @@ kubectl -n default exec testclient \
    --partitions 1 --replication-factor 1
 ```
 
-Now we can listen to the messages on this topic
+Now we can listen to the messages on this topic:
 
 ```
 kubectl -n default exec -it testclient -- /usr/bin/kafka-console-consumer --bootstrap-server kafka.kubeless:9092 --topic uploads --from-beginning
@@ -140,7 +140,7 @@ mc event add minio/uploads arn:minio:sqs:us-east-1:1:kafka --event put
 
 Next let's create a function that can be called as messages come in from Kafka.  
 
-Get the function from [here](https://raw.githubusercontent.com/vallard/K8sServerless/master/yolo/rek.py), or alternatively it is in the `./K8sServerless/yolo` directory.  You will also need the `requirements.txt` file available [here](https://raw.githubusercontent.com/vallard/K8sServerless/master/yolo/requirements.txt)
+Get the function from [here](https://raw.githubusercontent.com/vallard/K8sServerless/master/yolo/rek.py), or alternatively it is in the `./K8sServerless/yolo` directory.  You will also need the `requirements.txt` file available [here](https://raw.githubusercontent.com/vallard/K8sServerless/master/yolo/requirements.txt).
 
 To do this we run: 
 
@@ -158,7 +158,13 @@ Finally we need to tie the Kafka trigger to the function:
 kubeless trigger kafka create rek --function-selector created-by=kubeless,function=rek --trigger-topic uploads
 ```
 
-Now you should be able to upload an image.  Then, after waiting a bit, if you refresh the page you will see that it tries to recognize the objects it sees in the page.
+Now you should be able to upload an image from the photobook URL, e.g:
+
+```
+http://10.10.20.201:9000/photobook/index.html
+```
+
+Then, after waiting a bit, if you refresh the page you will see that it tries to recognize the objects it *sees* in the page.
 
 ![img](../images/yolo02.png)
 
@@ -181,7 +187,7 @@ kubeless function update rek -f rek.py
 
 ## Where to next?
 
-You are done!  Congratulations! You now know everything about serverless on prem.  You can now put it on your LinkedIn profile as 'serverless expert'... right? 
+You are done!  Congratulations! You now know everything about serverless on prem.  You can now put it on your LinkedIn profile as 'Serverless expert'... right? 
 
 * [Go Back Home](../README.md)
 * [Previous Module: serverless](../serverless/README.md)
