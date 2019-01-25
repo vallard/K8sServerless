@@ -1,10 +1,10 @@
-# 8. Serverless Backend
+# 8. Serverless Back-end
 
-We will add several backend API calls now.  We have a photobook so the basic application will allow us to add, view or delete photos.  Thats pretty much all we need.  We could continue to use the `kubeless` commands to deploy the different functions but the [serverless framework](https://serverless.com) gives us a better structured way to manage our kubeless functions. This way we can deploy our functions to execute our photobook.
+We will add several back-end API calls now.  We have a photobook, so the basic application will allow us to add, view or delete photos.  That's pretty much all we need.  We could continue to use the `kubeless` commands to deploy the different functions but the [serverless framework](https://serverless.com) gives us a better structured way to manage our Kubeless functions. This way we can deploy our functions to execute our photobook.
 
 ## 8.1 Install node
 
-Because the serverless framework is written in javascript, you will need to install [node and npm](https://www.npmjs.com/get-npm).  
+Because the serverless framework is written in JavaScript, you will need to install [Node and npm](https://www.npmjs.com/get-npm).  
 
 ### 8.1.1 Windows
 
@@ -24,11 +24,11 @@ Because the serverless framework is written in javascript, you will need to inst
 npm install -g serverless
 ```
 
-If all goes well you will have the serverless platform installed.  
+If all goes well you will have the serverless platform installed in your workstation.  
 
 ## 8.3 Get code
 
-We now need to get the code from GitHub in order to build our system.  
+We now need to get the code from GitHub, in order to build our system.  So first you will need to install [Git](https://git-scm.com/) in your system.
 
 ### 8.3.1 Git for Windows
 
@@ -36,7 +36,7 @@ We now need to get the code from GitHub in order to build our system.
 
 ### 8.3.2 Git for MacOS
 
-You can use brew or grab from [here](https://git-scm.com/downloads).
+You can use `brew` or grab from [here](https://git-scm.com/downloads).
 
 ### 8.3.3 Download this repository
 
@@ -45,13 +45,12 @@ On the command line go to a directory where you will remember (I use `~/Code` fo
 From there, run:
 
 ```
-git clone git@github.com:vallard/K8sServerless.git
+git clone https://github.com/vallard/K8sServerless.git
 ```
 
-This will download this entire repo that you have been reading.  
+This will download the entire repository you are currently reading.  
 
 ## 8.4 Deploy Serverless Functions
-
 
 ### 8.4.1 Install package dependencies
 
@@ -97,7 +96,7 @@ Deploy the functions:
 sls deploy
 ```
 
-output:
+Output (it might take some minutes):
 
 ```
 Serverless: Packaging service...
@@ -109,6 +108,8 @@ Serverless: Function list successfully deployed
 Serverless: Function upload successfully deployed
 Serverless: Function delete successfully deployed
 ```
+
+If you get some errors, try running `sls deploy` again.
 
 ## 8.5 Test/Verify Serverless Functions
 
@@ -183,4 +184,4 @@ At this point three serverless functions have been installed to allow us to uplo
 
 * [Go Back Home](../README.md)
 * [Previous Module: Application Overview](../photos/OVERVIEW.md)
-* [Next Module: Front End time!](../photos/README.md)
+* [Next Module: Front-end time!](../photos/README.md)
