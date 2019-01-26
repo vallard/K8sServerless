@@ -41,7 +41,7 @@ CORS is _Cross-Origin Resource Sharing_. When the web application is from one or
 
 ### 6.2.2 Update the ConfigMap    
 
-We have already prepared a new runtime environment for this lab.  To use it we have to modify the [ConfigMap](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/) that we just installed with kubeless. To see it run:
+We have already prepared a new runtime environment for this lab.  To use it we have to modify the [ConfigMap](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/) that we just installed with Kubeless. To see it run:
 
 ```
 kubectl get cm -n kubeless
@@ -69,7 +69,7 @@ Very carefully replace the python runtime image with:
 
 ### 6.2.3 Restart the `kubeless` pods
 
-Now we will delete the controller pod, so that it re-reads the ConfigMaps:
+Now we will delete the controller pod, so that it re-reads the ConfigMap:
 
 ```
 kubectl delete pods -n kubeless -l kubeless=controller
@@ -143,11 +143,11 @@ Kubeless creates a [deployment](https://kubernetes.io/docs/concepts/workloads/co
 kubectl get pods,services -l function=hello
 ```
 
-This service, by default, is of type `ClusterIP`, so it can be called internally but not reached externally, unless we create an ingress rule or configurer the service as `LoadBalancer`.
+This service, by default, is of type `ClusterIP`, so it can be called internally but not reached externally, unless we create an ingress rule or configure the service as `LoadBalancer`.
 
 ### 6.4.4 Test the `hello` function
 
-We can then call the function by either using a [proxy](https://kubernetes.io/docs/tasks/access-kubernetes-api/http-proxy-access-api/) or spin up our own container to run.  Let's use our own container to do talk to it.
+We can then call the function by either using a [proxy](https://kubernetes.io/docs/tasks/access-kubernetes-api/http-proxy-access-api/), or spin up our own container to run.  Let's use our own container to talk to it.
 
 ```
 kubectl run alp --image=alpine -- sleep 60000
@@ -166,7 +166,9 @@ export AL=$(kubectl get pods | grep alp | awk '{print $1}')
 kubectl exec -it $AL /bin/sh
 ```
 
-This will put you *in* the pod.  We can now call the service within this pod, since we have access to `ClusterIP`s in the pod space:
+
+This will put you *in* the pod.  From there we can now call the *hello* function, since the pod has access to the function's service `ClusterIP` (only reachable for pods inside the cluster):
+
 
 ```
 apk add --no-cache curl  # install curl
@@ -175,25 +177,26 @@ curl -L --data '{"Another": "Echo"}' \
   hello:8080
 ```
 
-This will return exactly what you gave it:
+This will return exactly what you sent to it:
 
 ```
 {"Another": "Echo"}
 ```
 
-**Our first function as a service works!**
+**Our first function-as-a-service works!**
 
 Notice that the way we call other functions or services in kubernetes follows the form:
 
 ```
-<svc>.<namespace>.svc.<cluster domain>
+<svc>.<namespace>.svc.<cluster_domain>
 ```
 
-In this case it was
+In this case it was:
 
 ```
 hello.default.svc.cluster.local
 ```
+
 
 So you could also try something like this:
 
@@ -204,6 +207,7 @@ curl -L --data '{"Another": "Echo"}' \
 ```
 
 By default we are in the same namespace, so we could leave everything else off and just use `hello`.
+
 
 
 ### 6.4.5 Delete Sample Function
@@ -316,14 +320,14 @@ You should instantly see a smaller version appear in the `/thumbs` directory!
 If it didn't work, check your extension again.  Then use some of the debugging tools we looked at earlier:
 
 ```
-kubectl logs -f <pod name>
+kubectl logs -f <pod_name>
 ```
 
 ### 6.6 Kubeless Conclusion
 
-This module shows how `kubeless` can create functions.  They are quick and powerful.  They create services and pods.  We don't need to worry about creating the containers for our runtimes and can just write the code.  In this case we just wrote some python code and the service put it into containers ready to use.  
+This module shows how `kubeless` can create functions.  They are quick and powerful.  They create services and pods.  We don't need to worry about creating the containers for our runtimes, and can just focus on writing code.  In this case we just wrote some python code and the service put it into containers ready to use.  
 
-* No `Dockerfile`s required
+* No `Dockerfile` required.
 * No `yaml` files created.  
 
 But how would you test such a function in a serverless world?  How do you iterate?  How do you do rollbacks?  How do you integrate it into a CI/CD pipeline?  Many of these questions are still being looked at and have not been solved in a one size fits all manner.
@@ -334,7 +338,7 @@ But how would you test such a function in a serverless world?  How do you iterat
 
 ###### Challenge 6.2 Hint:
 
-After changing code you need to update the function, and you can use:
+After changing the code you need to update the function with the following command:
 
 ```
 kubeless function update thumb -f resize.py
