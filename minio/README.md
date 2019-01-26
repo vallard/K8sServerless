@@ -42,10 +42,9 @@ Be sure your pods are `Running` so that things work.
 
 ## 5.3 Accessing Minio
 
-Now we want to be able to connect to the frontend from the public Internet (well, we are behind a VPN, but the idea is the same).  In order to do this, there are three ways we could expose our minio instance.  The first one is to use a LoadBalancer `EXTERNAL-IP` which is easy. The second way is to use an ingress rule as we showed in the [Kubernetes Lab](../kubernetes/README.md).  And the third one is to use the cluster IP address and the mapped port for the Minio service. In our helm chart we already configured this to be of type `LoadBalancer` so you should see an `EXTERNAL-IP` already for your instance of Minio.
+Now we want to be able to connect to the front-end from the public Internet (well, we are behind a VPN, but the idea is the same).  In order to do this, there are three ways we could expose our Minio instance.  The first one is to use a LoadBalancer `EXTERNAL-IP`, which is easy. The second way is to use an ingress rule, as we showed in the [Kubernetes Lab](../kubernetes/README.md).  And the third one is to use the Kubernetes cluster IP address and the mapped port for the Minio service. In our helm chart we already configured this to be of type `LoadBalancer` so you should see an `EXTERNAL-IP` already for your instance of Minio.
 
-##### Challenge 5.2: What is the external IP address of Minio?
-
+##### Challenge 5.3: What is the external IP address of Minio?
 
 ## 5.4 Log in to Minio browser
 
@@ -57,7 +56,7 @@ Secret Key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 ```
 
 
-Log into minio with these values at the IP address you found in __challenge 5.2__.  Notice that Minio isn't accessible on port `80`.  How can you find out which port to access minio?
+Log into Minio with these values at the IP address you found in __challenge 5.3__.  Notice that Minio isn't accessible on port `80`.  How can you find out which port to access Minio?
 
 ![minio](../images/minio01.png)
 
@@ -67,12 +66,11 @@ Once logged in you'll see the contents available to you. At this point, there sh
 
 ## 5.5 Minio Command Line Client
 
-While GUIs are nice, they are also hard for automation tools to interact with.  Let's use the command line client to interact with minio.
+While GUIs are nice, they are also hard for automation tools to interact with.  Let's use the command line client to interact with Minio.
 
 [Download the latest client](https://docs.minio.io/docs/minio-client-complete-guide) for your Operating System
 
 ### 5.5.1 Windows
-
 
 Download the `mc.exe` command and place it in your path.
 
@@ -147,7 +145,6 @@ You should verify that the image was properly placed in the storage bucket in th
 ## 5.8 Conclusion
 
 With Minio up we now have object storage.  While this is a quick way to set it up, this is not good for production.  We would like to be able to make sure that the volumes persist if the container goes down, or even if the host goes down.  We can do this with [persistent volumes (PV)](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) and [persistent volume claims (PVC)](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims).  In addition we could use more Minio nodes to provide the scale and availability for our cluster.
-
 
 ## Sources
 
