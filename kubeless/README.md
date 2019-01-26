@@ -137,7 +137,11 @@ kubectl logs -f <pod_name>
 
 Where `<pod_name>` is the name of the pod that is failing.
 
-Kubeless deploys a [deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) and a [service](https://kubernetes.io/docs/concepts/services-networking/service/)
+Kubeless creates a [deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) and a [service](https://kubernetes.io/docs/concepts/services-networking/service/)
+
+```
+kubectl get pods,services -l function=hello
+```
 
 This service, by default, is of type `ClusterIP`, so it can be called internally but not reached externally, unless we create an ingress rule or configurer the service as `LoadBalancer`.
 
