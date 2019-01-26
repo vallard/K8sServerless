@@ -57,14 +57,14 @@ This will put us in a `vi` session.  We will look for the following lines:
 
 ```
 "python:2.7", "phase": "installation"}, {"env": {"PYTHONPATH": "$(KUBELESS_INSTALL_VOLUME)/lib/python2.7/site-packages:$(KUBELESS_INSTALL_VOLUME)"},
-    "image": "kubeless/python@sha256:34332f4530508a810f491838a924c36ceac0ec7cab487520e2db2b037800ecda",
+"image": "kubeless/python@sha256:34332f4530508a810f491838a924c36ceac0ec7cab487520e2db2b037800ecda",
 ```
 
 Very carefully replace the python runtime image with:
 
 ```
 "python:2.7", "phase": "installation"}, {"env": {"PYTHONPATH": "$(KUBELESS_INSTALL_VOLUME)/lib/python2.7/site-packages:$(KUBELESS_INSTALL_VOLUME)"},
-    "image": "vallard/kubeless-pythonf:2.7",
+"image": "vallard/kubeless-pythonf:2.7",
 ```
 
 ### 6.2.3 Restart the `kubeless` pods
@@ -137,7 +137,11 @@ kubectl logs -f <pod_name>
 
 Where `<pod_name>` is the name of the pod that is failing.
 
-Kubeless deploys a [deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) and a [service](https://kubernetes.io/docs/concepts/services-networking/service/)
+Kubeless creates a [deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) and a [service](https://kubernetes.io/docs/concepts/services-networking/service/)
+
+```
+kubectl get pods,services -l function=hello
+```
 
 This service, by default, is of type `ClusterIP`, so it can be called internally but not reached externally, unless we create an ingress rule or configure the service as `LoadBalancer`.
 
@@ -149,14 +153,22 @@ We can then call the function by either using a [proxy](https://kubernetes.io/do
 kubectl run alp --image=alpine -- sleep 60000
 ```
 
-This will deploy a `pod alp-xxxxxxxxxx-xxxxx`.  We can log into this pod with:
+This will deploy a `pod alp-xxxxxxxxxx-xxxxx`. Please wait until you see it *Running*:
+
+```
+kubectl get pods
+```
+
+And then log into this pod with:
 
 ```
 export AL=$(kubectl get pods | grep alp | awk '{print $1}')
 kubectl exec -it $AL /bin/sh
 ```
 
+
 This will put you *in* the pod.  From there we can now call the *hello* function, since the pod has access to the function's service `ClusterIP` (only reachable for pods inside the cluster):
+
 
 ```
 apk add --no-cache curl  # install curl
@@ -185,7 +197,17 @@ In this case it was:
 hello.default.svc.cluster.local
 ```
 
-By default we are in the same namespace and so we could leave everything else off and just use `hello`.
+
+So you could also try something like this:
+
+```
+curl -L --data '{"Another": "Echo"}' \
+  --header "Content-Type:application/json" \
+  hello.default.svc.cluster.local:8080
+```
+
+By default we are in the same namespace, so we could leave everything else off and just use `hello`.
+
 
 
 ### 6.4.5 Delete Sample Function
@@ -232,13 +254,13 @@ You will see an entry:
 		}
 ```
 
-This is the first webhook `1` that is available to us.  Let's use it:
+This is the first webhook `1` that is available to us.  This entry just defines what endpoint will be notified when a relevant event occurs.  Let's define that event as the upload of a file to the *uploads* folder in Minio:
 
 ```
 mc event add minio/uploads arn:minio:sqs:us-east-1:1:webhook --event put
 ```
 
-You could also filter by suffixes of items, but this is difficult if they use JPEG, jpg, Jpeg, etc for extension names.  Without the filter all items trigger a notification.
+You could also define the specific type of files to be considered as an *event*, filtering by file extensions. But this is specially difficult for photos, as they can use multiple different extensions: JPEG, jpg, Jpeg, etc.  For our event definition we are not using any filter, so all uploaded files will trigger a notification.
 
 We can now see the webhook is ready:
 
@@ -280,9 +302,15 @@ kubeless function deploy thumb \
  --dependencies requirements.txt
 ```
 
+Wait until it shows up us *Running*:
+
+```
+kubectl get pods -l function=thumb
+```
+
 ### 6.5.6 Test the `resize` function
 
-Now upload an image in the `uploads` bucket but be sure the extension is `jpeg` or `JPEG`.  
+Now upload an image to the `uploads` bucket, and **please make sure the extension is `jpeg` or `JPEG`**.  
 
 ![kubeless upload](../images/kubeless01.png)
 
