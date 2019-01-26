@@ -1,10 +1,10 @@
 # 5. Minio
 
-For our application we need a place to store pictures.  Object storage is good for this because it is simple and readily available.  S3 is perhaps the most used AWS service because of its availability and cheap price.  For on-prem we can use an open source project called [Minio](https://minio.io/) that not only works on prem but can configure our cloud based object storage as well such as [S3](https://aws.amazon.com/s3/) and [GCS](https://cloud.google.com/storage/).  
+For our application we need a place to store pictures.  Object storage is good for this because it is simple and readily available.  S3 is perhaps the most used AWS service because of its availability and cheap price.  For on-prem we can use an open source project called [Minio](https://minio.io/) that not only works on-prem but can configure our cloud based object storage as well such as [S3](https://aws.amazon.com/s3/) and [GCS](https://cloud.google.com/storage/).  
 
 ## 5.1 Create a Minio Object Storage System
 
-Creating an instance of minio with helm is simple. We have, however, added an additional configuration to the service to modify things slightly for our application.  To install this we run:
+Creating an instance of Minio with helm is simple. We have, however, added an additional configuration to the service to modify things slightly for our application.  To install this we run:
 
 ```
 helm install stable/minio --name fonkfe -f https://raw.githubusercontent.com/vallard/K8sServerless/master/minio/config.yaml
@@ -119,7 +119,6 @@ mc config host list
 ```
 
 Some of these come by default but are not configured (like the `s3` and `gcs`), others like the `play` give you an environment you can mess around in.
-
 
 ## 5.7 Test Minio Upload
 
