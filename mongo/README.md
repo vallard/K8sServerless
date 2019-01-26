@@ -179,6 +179,14 @@ Notice that we didn't just remove the `_id` we removed all with the brand `Versa
 
 When it comes down to it, all we are doing with applications are updating and modifying databases. 
 
+### 4.3.5 Exit the container
+
+Now that you are done with you MongoDB client you can exit the pod with:
+
+```
+exit
+```
+
 ## Sources
 
 * [MongoDB CRUD Operations](https://docs.mongodb.com/manual/crud/)
