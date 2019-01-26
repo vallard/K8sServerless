@@ -280,6 +280,12 @@ kubeless function deploy thumb \
  --dependencies requirements.txt
 ```
 
+Wait until it shows up us *Running*:
+
+```
+kubectl get pods -l function=thumb
+```
+
 ### 6.5.6 Test the `resize` function
 
 Now upload an image to the `uploads` bucket, and **please make sure the extension is `jpeg` or `JPEG`**.  
