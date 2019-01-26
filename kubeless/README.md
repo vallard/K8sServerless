@@ -57,14 +57,14 @@ This will put us in a `vi` session.  We will look for the following lines:
 
 ```
 "python:2.7", "phase": "installation"}, {"env": {"PYTHONPATH": "$(KUBELESS_INSTALL_VOLUME)/lib/python2.7/site-packages:$(KUBELESS_INSTALL_VOLUME)"},
-    "image": "kubeless/python@sha256:34332f4530508a810f491838a924c36ceac0ec7cab487520e2db2b037800ecda",
+"image": "kubeless/python@sha256:34332f4530508a810f491838a924c36ceac0ec7cab487520e2db2b037800ecda",
 ```
 
 Very carefully replace the python runtime image with:
 
 ```
 "python:2.7", "phase": "installation"}, {"env": {"PYTHONPATH": "$(KUBELESS_INSTALL_VOLUME)/lib/python2.7/site-packages:$(KUBELESS_INSTALL_VOLUME)"},
-    "image": "vallard/kubeless-pythonf:2.7",
+"image": "vallard/kubeless-pythonf:2.7",
 ```
 
 ### 6.2.3 Restart the `kubeless` pods
